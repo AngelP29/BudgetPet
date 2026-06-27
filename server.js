@@ -14,8 +14,10 @@ app.use(cors());
 const authRoutes = require('./routes/auth');
 const expenseRoutes = require('./routes/expenses');
 const petRoutes = require('./routes/pets');
+const aiRoutes = require('./routes/ai');
 
 // MOUNT ENDPOINT LINKS TO APP
+app.use('/api/pets', aiRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/pets', petRoutes);
