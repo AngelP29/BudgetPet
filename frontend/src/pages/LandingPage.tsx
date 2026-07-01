@@ -1,11 +1,15 @@
-import PageTitle from "./PageTitle";
-import Login from "./Login";
+import "./LandingPage.css"
+import PageTitle from "../components/PageTitle";
+import Login from "../components/Login";
 
-const LandingPage = () => {
-    return(
-        <div>
+function LandingPage() {
+    return (
+        <div className="landing-page">
+
             <PageTitle />
+
             <Login />
+
         </div>
     );
 };
