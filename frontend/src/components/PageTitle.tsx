@@ -4,9 +4,7 @@ function PageTitle() {
             <h1 className="hero-title">BudgetPet</h1>
 
             <p className="hero-subtitle">
-                Build better financial habits alongside
-                <br />
-                your virtual companion.
+                Build better financial habits alongside your virtual companion.
             </p>
         </div>
     );

@@ -29,6 +29,11 @@ function SignUp(){
                 />
 
                 <input
+                    type="text"
+                    placeholder="Username"
+                />
+
+                <input
                     type="email"
                     placeholder="Email"
                 />

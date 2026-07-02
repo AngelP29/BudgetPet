@@ -12,8 +12,8 @@ function Login() {
             </p>
 
             <input
-                type="email"
-                placeholder="Email"
+                type="text"
+                placeholder="Username"
             />
 
             <input

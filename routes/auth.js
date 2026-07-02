@@ -8,21 +8,43 @@ const Pet = require('../models/Pet');
 // Secret key for signing web tokens (In production, move this to your .env)
 const JWT_SECRET = "budgetpet_super_secret_key_12345";
 
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
+
 // 1. REGISTER ENDPOINT (/api/auth/register)
 router.post('/register', async (req, res) => {
     try {
-        const { firstName, lastName, email, password } = req.body;
+        const { firstName, lastName, username, email, password } = req.body;
 
-        // Check if user already exists
-        let user = await User.findOne({ email });
-        if (user) return res.status(400).json({ error: "User already registered with this email." });
+        //basic validation
+        if(!firstName || !lastName || !username || !email || !password){
+            return res.status(400).json({error: "All fields are required."});
+        }
+
+        //password strength checker
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({
+                error: "Password must be at least 8 characters and include uppercase, lowercase, a number, and a special character."
+            });
+        }
+
+        //check duplicate email
+        let exisitngEmail = await User.findOne({ email });
+        if (user) {
+            return res.status(400).json({ error: "User already registered with this email." });
+        }
+
+        //check duplicate username
+        let existingUsername = await User.findOne({ username });
+        if (existingUsername) {
+            return res.status(400).json({ error: "That username is already taken." });
+        }
 
         // Hash the password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
         // Save new user
-        user = new User({ firstName, lastName, email, password: hashedPassword });
+        user = new User({ firstName, lastName, username, email, password: hashedPassword });
         await user.save();
 
         // AUTOMATICALLY CREATE STARTER PET FOR THIS USER
@@ -35,19 +57,24 @@ router.post('/register', async (req, res) => {
         // Create secure token for automatic login
         const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '30d' });
 
-        res.status(201).json({ message: "Registration successful!", token, userId: user._id });
+        return res.status(201).json({ message: "Registration successful!", token, userId: user._id });
     } catch (err) {
-        res.status(500).json({ error: "Server error during registration: " + err.message });
+        return res.status(500).json({ error: "Server error during registration: " + err.message });
     }
 });
 
 // 2. LOGIN ENDPOINT (/api/auth/login)
 router.post('/login', async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { username, password } = req.body;
+
+        //basic validation
+        if (!username || !password) {
+            return res.status(400).json({ error: "Username and password are required." });
+        }
 
         // Check user existence
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ username });
         if (!user) return res.status(400).json({ error: "Invalid credentials." });
 
         // Validate password
@@ -57,9 +84,9 @@ router.post('/login', async (req, res) => {
         // Issue new token (Keeps device logged in for 30 days)
         const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '30d' });
 
-        res.json({ message: "Welcome back!", token, userId: user._id });
+        return res.json({ message: "Welcome back!", token, userId: user._id });
     } catch (err) {
-        res.status(500).json({ error: "Server error during login: " + err.message });
+        return res.status(500).json({ error: "Server error during login: " + err.message });
     }
 });
 
