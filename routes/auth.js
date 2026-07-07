@@ -28,8 +28,8 @@ router.post('/register', async (req, res) => {
         }
 
         //check duplicate email
-        let exisitngEmail = await User.findOne({ email });
-        if (user) {
+        let existingEmail = await User.findOne({ email });
+        if (existingEmail) {
             return res.status(400).json({ error: "User already registered with this email." });
         }
 
