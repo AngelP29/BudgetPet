@@ -23,7 +23,7 @@ function PetChat(){
         try{
             setIsLoading(true);
 
-            const response = await fetch("http://localhost:5000/api/pets/chat", {
+            const response = await fetch("/api/pets/chat", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
