@@ -72,6 +72,10 @@ function SignUp(){
 
             setSuccessMessage("Account created successfully! Redirecting...");
 
+            localStorage.setItem("userId", data.userId);
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("username", data.username);
+
             setTimeout(() => {
                 navigate("/dashboard");
             }, 700);

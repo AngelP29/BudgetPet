@@ -8,6 +8,14 @@ router.post('/add', async (req, res) => {
     try {
         const { userId, amount, category, description } = req.body;
 
+        if (!userId || !amount || !category) {
+            return res.status(400).json({ error: "User, amount, and category are required." });
+        }
+
+        if (Number(amount) <= 0) {
+            return res.status(400).json({ error: "Amount must be greater than 0." });
+        }
+
         const newExpense = new Expense({ userId, amount, category, description });
         await newExpense.save();
 

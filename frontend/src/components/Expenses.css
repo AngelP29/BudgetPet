@@ -1,99 +1,133 @@
 .expense-card{
-
     background:white;
-
     border-radius:24px;
-
     padding:30px;
-
     margin-bottom:30px;
-
     box-shadow:0 15px 35px rgba(0,0,0,.12);
-
 }
 
 .expense-card h2{
-
     margin-top:0;
-
     color:#333;
+}
 
+.expense-card h3{
+    margin-top:24px;
+    margin-bottom:12px;
+    color:#333;
+}
+
+.expense-card form{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
 }
 
 .expense-card input,
 .expense-card select{
-
     width:100%;
-
     padding:14px;
-
-    margin-top:15px;
-
     border-radius:12px;
-
     border:2px solid #E5E7EB;
-
     font-size:16px;
-
     box-sizing:border-box;
-
+    transition:.2s;
 }
 
 .expense-card input:focus,
 .expense-card select:focus{
-
     outline:none;
-
     border-color:#58C78D;
-
+    box-shadow:0 0 8px rgba(88,199,141,.25);
 }
 
 .expense-card button{
-
     width:100%;
-
-    margin-top:18px;
-
+    margin-top:4px;
     padding:14px;
-
     border:none;
-
     border-radius:12px;
-
     background:#58C78D;
-
     color:white;
-
     font-size:16px;
-
     font-weight:bold;
-
     cursor:pointer;
-
     transition:.2s;
-
 }
 
 .expense-card button:hover{
-
     background:#47b67c;
-
+    transform:translateY(-2px);
 }
 
-.expense-card ul{
+.expense-card button:disabled{
+    opacity:.7;
+    cursor:not-allowed;
+    transform:none;
+}
 
+.expense-card hr{
+    border:none;
+    border-top:1px solid #E5E7EB;
+    margin:28px 0 8px 0;
+}
+
+.expense-error-message{
+    margin:0 0 14px 0;
+    color:#D64545;
+    font-size:14px;
+}
+
+.expense-success-message{
+    margin:0 0 14px 0;
+    color:#2E9C62;
+    font-size:14px;
+}
+
+.expense-list{
     list-style:none;
-
     padding:0;
-
-    margin-top:15px;
-
+    margin:0;
 }
 
-.expense-card li{
-
-    padding:12px 0;
-
+.expense-item{
+    padding:14px 0;
     border-bottom:1px solid #EEE;
+}
 
+.expense-item:last-child{
+    border-bottom:none;
+}
+
+.expense-item-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:6px;
+}
+
+.expense-category{
+    font-weight:600;
+    color:#333;
+}
+
+.expense-amount{
+    font-weight:700;
+    color:#4A7DF3;
+}
+
+.expense-item-bottom{
+    display:flex;
+    justify-content:space-between;
+    gap:16px;
+    font-size:14px;
+    color:#777;
+}
+
+.expense-description{
+    flex:1;
+}
+
+.expense-date{
+    white-space:nowrap;
 }

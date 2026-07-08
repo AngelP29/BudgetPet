@@ -5,6 +5,8 @@ import Expenses from "../components/Expenses";
 import PetChat from "../components/PetChat";
 
 function Dashboard() {
+    const username = localStorage.getItem("username") || "User";
+
     return (
         <div className="dashboard">
 
@@ -15,13 +17,13 @@ function Dashboard() {
                 </div>
 
                 <div className="profile-button">
-                    User 👤
+                    {username} 👤
                 </div>
 
             </header>
 
             <h2 className="welcome-message">
-                Welcome back!
+                Welcome back, {username}!
             </h2>
 
             {/* Pet Home */}
