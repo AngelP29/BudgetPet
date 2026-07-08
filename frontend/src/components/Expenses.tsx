@@ -30,16 +30,11 @@ function Expenses(){
             return;
         }
 
-        if(!item || !amount){
-            setErrorMessage("Please fill in Item and Amount.");
-            return;
-        }
-
         try{
             setIsFetchingExpenses(true);
             setErrorMessage("");
 
-            const response = await fetch("/api/expenses/userId");
+            const response = await fetch(`/api/expenses/${userId}`);
             const data = await response.json();
 
             if (!response.ok) {
