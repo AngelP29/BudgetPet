@@ -44,7 +44,7 @@ router.post('/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         // Save new user
-        user = new User({ firstName, lastName, username, email, password: hashedPassword });
+        const user = new User({ firstName, lastName, username, email, password: hashedPassword });
         await user.save();
 
         // AUTOMATICALLY CREATE STARTER PET FOR THIS USER
@@ -57,7 +57,7 @@ router.post('/register', async (req, res) => {
         // Create secure token for automatic login
         const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '30d' });
 
-        return res.status(201).json({ message: "Registration successful!", token, userId: user._id });
+        return res.status(201).json({ message: "Registration successful!", token, userId: user._id, username: user.username });
     } catch (err) {
         return res.status(500).json({ error: "Server error during registration: " + err.message });
     }
@@ -84,7 +84,7 @@ router.post('/login', async (req, res) => {
         // Issue new token (Keeps device logged in for 30 days)
         const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '30d' });
 
-        return res.json({ message: "Welcome back!", token, userId: user._id });
+        return res.json({ message: "Welcome back!", token, userId: user._id, username: user.username });
     } catch (err) {
         return res.status(500).json({ error: "Server error during login: " + err.message });
     }

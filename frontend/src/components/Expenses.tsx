@@ -39,7 +39,7 @@ function Expenses(){
             setIsFetchingExpenses(true);
             setErrorMessage("");
 
-            const response = await fetch("/api/expenses/:userId");
+            const response = await fetch("/api/expenses/userId");
             const data = await response.json();
 
             if (!response.ok) {
