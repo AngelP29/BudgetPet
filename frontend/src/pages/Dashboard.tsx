@@ -1,4 +1,5 @@
 import "./Dashboard.css";
+import { useNavigate } from "react-router-dom";
 
 import PetDisplay from "../components/PetDisplay";
 import Expenses from "../components/Expenses";
@@ -6,6 +7,15 @@ import PetChat from "../components/PetChat";
 
 function Dashboard() {
     const username = localStorage.getItem("username") || "User";
+    const navigate = useNavigate();
+
+    function handleLogout() {
+        localStorage.removeItem("userId");
+        localStorage.removeItem("token");
+        localStorage.removeItem("username");
+
+        navigate("/");
+    }
 
     return (
         <div className="dashboard">
@@ -16,8 +26,14 @@ function Dashboard() {
                     🐾 <span>BudgetPet</span>
                 </div>
 
-                <div className="profile-button">
-                    {username} 👤
+                <div className="header-right">
+                    <div className="profile-button">
+                        {username} 👤
+                    </div>
+
+                    <button className="logout-button" onClick={handleLogout}>
+                        Logout
+                    </button>
                 </div>
 
             </header>
