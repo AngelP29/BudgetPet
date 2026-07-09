@@ -35,6 +35,14 @@ const UserSchema = new mongoose.Schema({
     verificationToken: {
         type: String,
         default: ''
+    },
+    monthlyBudget: {
+        type: Number,
+        default: 0
+    },
+    monthlySavingsGoal: {
+        type: Number,
+        default: 0
     }
 }, { timestamps: true });
 
