@@ -22,6 +22,17 @@ function Expenses(){
     const [isLoading, setIsLoading] = useState(false);
     const [isFetchingExpenses, setIsFetchingExpenses] = useState(false);
 
+    //which expense is currently showing manage options
+    const [activeExpenseId, setActiveExpenseId] = useState<string | null>(null);
+
+    //which expense is currently in edit mode
+    const [editingExpenseId, setEditingExpenseId] = useState<string | null>(null);
+
+    //edit form state
+    const [editItem, setEditItem] = useState("");
+    const [editAmount, setEditAmount] = useState("");
+    const [editDescription, setEditDescription] = useState("");
+
     async function loadExpenses(){
         const userId = localStorage.getItem("userId");
 
@@ -115,6 +126,124 @@ function Expenses(){
         }
     }
 
+    function startEditing(expense: Expense){
+        setEditingExpenseId(expense._id);
+        setActiveExpenseId(expense._id);
+
+        setEditItem(expense.category);
+        setEditAmount(String(expense.amount));
+        setEditDescription(expense.description || "");
+        setErrorMessage("");
+        setSuccessMessage("");
+    }
+
+    function cancelEditing(){
+        setActiveExpenseId(null);
+        setEditingExpenseId(null);
+        setEditItem("");
+        setEditAmount("");
+        setEditDescription("");
+        setErrorMessage("");
+        setSuccessMessage("");
+    }
+
+    async function saveEditedExpense(expenseId: string){
+        const userId = localStorage.getItem("userId");
+
+        if(!userId){
+            setErrorMessage("No logged-in user found.");
+            return;
+        }
+
+        if (!editItem.trim() || !editAmount.trim()) {
+            setErrorMessage("Please fill in Item and Amount.");
+            return;
+        }
+
+        if (Number(editAmount) <= 0) {
+            setErrorMessage("Amount must be greater than 0.");
+            return;
+        }
+
+        try{
+            setIsLoading(true);
+            setErrorMessage("");
+            setSuccessMessage("");
+
+            const response = await fetch(`/api/expenses/${expenseId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    userId,
+                    amount: Number(editAmount),
+                    category: editItem.trim(),
+                    description: editDescription.trim()
+                })
+            });
+
+            const data = await response.json();
+
+            if(!response.ok){
+                setErrorMessage(data.error || "Failed to update expense.");
+                return;
+            }
+
+            setSuccessMessage("Expense updated successfully!");
+            cancelEditing();
+            await loadExpenses();
+
+        } catch(e){
+            setErrorMessage("Unable to update expense right now.");
+        } finally{
+            setIsLoading(false);
+        }
+    }
+
+    async function deleteExpense(expenseId: string){
+        const userId = localStorage.getItem("userId");
+
+        if(!userId){
+            setErrorMessage("No logged-in user found.");
+            return;
+        }
+
+        const confirmed = window.confirm("Are you sure you want to delte this expense?");
+        if(!confirmed){
+            return;
+        }
+
+        try{
+            setIsLoading(true);
+            setErrorMessage("");
+            setSuccessMessage("");
+            
+            const response = await fetch(`api/expenses/${expenseId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ userId })
+            });
+
+            const data = await response.json();
+
+            if(!response.ok){
+                setErrorMessage(data.error || "Failed to delete expense.");
+                return;
+            }
+
+            setSuccessMessage("Expense deleted successfully!");
+            cancelEditing();
+            await loadExpenses();
+        } catch(e){
+            setErrorMessage("Unable to delete expense right now.");
+        } finally{
+            setIsLoading(false);
+        }
+    }
+
     return (
         <div className="expense-card">
             <h2>Add Expense</h2>
@@ -163,24 +292,114 @@ function Expenses(){
                 <ul className="expense-list">
                     {expenses.slice(0, 5).map((expense) => (
                         <li key={expense._id} className="expense-item">
-                            <div className="expense-item-top">
-                                <span className="expense-category">{expense.category}</span>
-                                <span className="expense-amount">
-                                    ${Number(expense.amount).toFixed(2)}
-                                </span>
-                            </div>
 
-                            <div className="expense-item-bottom">
-                                <span className="expense-description">
-                                    {expense.description || "No description"}
-                                </span>
+                            {editingExpenseId === expense._id ? (
+                                <div className="expense-edit-form">
+                                    <input
+                                        type="text"
+                                        value={editItem}
+                                        onChange={(e) => setEditItem(e.target.value)}
+                                        placeholder="Item / Category"
+                                    />
 
-                                {expense.date && (
-                                    <span className="expense-date">
-                                        {new Date(expense.date).toLocaleDateString()}
-                                    </span>
-                                )}
-                            </div>
+                                    <input
+                                        type="number"
+                                        value={editAmount}
+                                        onChange={(e) => setEditAmount(e.target.value)}
+                                        placeholder="Amount"
+                                        min="0"
+                                        step="0.01"
+                                    />
+
+                                    <input
+                                        type="text"
+                                        value={editDescription}
+                                        onChange={(e) => setEditDescription(e.target.value)}
+                                        placeholder="Description"
+                                    />
+
+                                    <div className="expense-action-row">
+                                        <button
+                                            type="button"
+                                            className="expense-save-button"
+                                            onClick={() => saveEditedExpense(expense._id)}
+                                            disabled={isLoading}
+                                        >
+                                            Save Changes
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            className="expense-cancel-button"
+                                            onClick={cancelEditing}
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="expense-item-top">
+                                        <span className="expense-category">{expense.category}</span>
+                                        <span className="expense-amount">
+                                            ${Number(expense.amount).toFixed(2)}
+                                        </span>
+                                    </div>
+
+                                    <div className="expense-item-bottom">
+                                        <span className="expense-description">
+                                            {expense.description || "No description"}
+                                        </span>
+
+                                        {expense.date && (
+                                            <span className="expense-date">
+                                                {new Date(expense.date).toLocaleDateString()}
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    <div className="expense-manage-row">
+                                        {activeExpenseId === expense._id ? (
+                                            <>
+                                                <button
+                                                    type="button"
+                                                    className="expense-manage-button edit-button"
+                                                    onClick={() => startEditing(expense)}
+                                                >
+                                                    Edit
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    className="expense-manage-button delete-button"
+                                                    onClick={() => deleteExpense(expense._id)}
+                                                >
+                                                    Delete
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    className="expense-manage-button cancel-button"
+                                                    onClick={cancelEditing}
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <button
+                                                type="button"
+                                                className="expense-manage-button manage-button"
+                                                onClick={() => {
+                                                    setActiveExpenseId(expense._id);
+                                                    setEditingExpenseId(null);
+                                                }}
+                                            >
+                                                Manage
+                                            </button>
+                                        )}
+                                    </div>
+                                </>
+                            )}
                         </li>
                     ))}
                 </ul>
