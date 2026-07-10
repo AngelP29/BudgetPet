@@ -15,12 +15,14 @@ const authRoutes = require('./routes/auth');
 const expenseRoutes = require('./routes/expenses');
 const petRoutes = require('./routes/pets');
 const aiRoutes = require('./routes/ai');
+const dashboardRoutes = require('./routes/dashboard');
 
 // MOUNT ENDPOINT LINKS TO APP
 app.use('/api/pets', aiRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/pets', petRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // Base sanity check landing URL
 app.get('/', (req, res) => {

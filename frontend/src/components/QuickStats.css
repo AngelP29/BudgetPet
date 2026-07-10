@@ -1,0 +1,31 @@
+/* ---------- Stats ---------- */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.stat-box {
+    background: #F4F7FA;
+    border-radius: 18px;
+    padding: 25px;
+    text-align: center;
+    transition: .25s;
+}
+
+.stat-box:hover {
+    transform: translateY(-4px);
+}
+
+.stat-box h3 {
+    margin: 0;
+    color: #4A7DF3;
+    font-size: 30px;
+}
+
+.stat-box p {
+    margin-top: 10px;
+    color: #666;
+}

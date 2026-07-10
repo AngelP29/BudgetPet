@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import PetDisplay from "../components/PetDisplay";
 import Expenses from "../components/Expenses";
 import PetChat from "../components/PetChat";
+import QuickStats from "../components/QuickStats";
 
 function Dashboard() {
     const username = localStorage.getItem("username") || "User";
@@ -51,35 +52,7 @@ function Dashboard() {
             <section className="dashboard-grid">
 
                 {/* Quick Stats */}
-                <div className="card stats-card">
-
-                    <h2>Quick Stats</h2>
-
-                    <div className="stats-grid">
-
-                        <div className="stat-box">
-                            <h3>$235</h3>
-                            <p>Total Saved</p>
-                        </div>
-
-                        <div className="stat-box">
-                            <h3>$87</h3>
-                            <p>Total Spent</p>
-                        </div>
-
-                        <div className="stat-box">
-                            <h3>$500</h3>
-                            <p>Monthly Budget</p>
-                        </div>
-
-                        <div className="stat-box">
-                            <h3>6 Days</h3>
-                            <p>Saving Streak</p>
-                        </div>
-
-                    </div>
-
-                </div>
+                <QuickStats />
 
                 {/* AI Coach */}
                 <PetChat />

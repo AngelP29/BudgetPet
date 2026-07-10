@@ -81,7 +81,7 @@ function SignUp(){
             }, 700);
 
         } catch(err){
-            setErrorMessage("Unavle to connect to the server.");
+            setErrorMessage("Unable to connect to the server.");
         } finally{
             setIsLoading(false);
         }
