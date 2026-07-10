@@ -1,6 +1,10 @@
 import "./Expenses.css"
 import { useEffect, useState } from "react";
 
+type ExpensesProps = {
+    onExpenseChanged: () => void;
+};
+
 type Expense = {
     _id : string;
     userId: string;
@@ -10,7 +14,7 @@ type Expense = {
     date: string
 };
 
-function Expenses(){
+function Expenses({ onExpenseChanged }: ExpensesProps){
     const [item, setItem] = useState("");
     const [amount, setAmount] = useState("");
     const [description, setDescription] = useState("");
@@ -119,6 +123,8 @@ function Expenses(){
 
             await loadExpenses();
 
+            onExpenseChanged();
+
         } catch (e) {
             setErrorMessage("Unable to add expense right now.");
         } finally {
@@ -193,6 +199,7 @@ function Expenses(){
             setSuccessMessage("Expense updated successfully!");
             cancelEditing();
             await loadExpenses();
+            onExpenseChanged();
 
         } catch(e){
             setErrorMessage("Unable to update expense right now.");
@@ -237,6 +244,7 @@ function Expenses(){
             setSuccessMessage("Expense deleted successfully!");
             cancelEditing();
             await loadExpenses();
+            onExpenseChanged();
         } catch(e){
             setErrorMessage("Unable to delete expense right now.");
         } finally{

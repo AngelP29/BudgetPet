@@ -1,5 +1,6 @@
 import "./Dashboard.css";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 import PetDisplay from "../components/PetDisplay";
 import Expenses from "../components/Expenses";
@@ -9,6 +10,12 @@ import QuickStats from "../components/QuickStats";
 function Dashboard() {
     const username = localStorage.getItem("username") || "User";
     const navigate = useNavigate();
+
+    const [refreshDashboard, setRefreshDashboard] = useState(0);
+
+    function refreshDashboardData(){
+        setRefreshDashboard(prev => prev + 1);
+    }
 
     function handleLogout() {
         localStorage.removeItem("userId");
@@ -45,14 +52,14 @@ function Dashboard() {
 
             {/* Pet Home */}
             <section className="pet-home">
-                <PetDisplay />
+                <PetDisplay refreshTrigger={refreshDashboard} />
             </section>
 
             {/* Main Dashboard */}
             <section className="dashboard-grid">
 
                 {/* Quick Stats */}
-                <QuickStats />
+                <QuickStats refreshTrigger={refreshDashboard} />
 
                 {/* AI Coach */}
                 <PetChat />
@@ -62,7 +69,7 @@ function Dashboard() {
             {/* Expense Form */}
             <section className="expense-section">
 
-                <Expenses />
+                <Expenses onExpenseChanged={refreshDashboardData} />
 
             </section>
 

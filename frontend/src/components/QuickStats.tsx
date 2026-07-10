@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import "./QuickStats.css"
 
+type QuickStatsProps = {
+    refreshTrigger: number;
+};
+
 type QuickStatsResponse = {
     monthlyBudget: number;
     monthlySavingsGoal: number;
@@ -8,7 +12,7 @@ type QuickStatsResponse = {
     budgetRemaining: number;
 };
 
-function QuickStats(){
+function QuickStats({ refreshTrigger }: QuickStatsProps){
     const [monthlyBudget, setMonthlyBudget] = useState("");
     const [monthlySavingsGoal, setMonthlySavingsGoal] = useState("");
     const [totalSpent, setTotalSpent] = useState(0);
@@ -20,7 +24,7 @@ function QuickStats(){
 
     useEffect(() => {
         getQuickStats();
-    }, []);
+    }, [refreshTrigger]);
 
     async function getQuickStats(){
         const userId = localStorage.getItem("userId");

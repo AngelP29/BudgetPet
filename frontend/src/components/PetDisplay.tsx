@@ -1,6 +1,10 @@
 import "./PetDisplay.css"
 
-function PetDisplay(){
+type PetDisplayProps = {
+    refreshTrigger: number;
+};
+
+function PetDisplay({ refreshTrigger }: PetDisplayProps){
 
     return(
 
