@@ -29,3 +29,69 @@
     margin-top: 10px;
     color: #666;
 }
+
+.stats-error-message{
+    margin: 0 0 14px 0;
+    color: #D64545;
+    font-size: 14px;
+}
+
+.stats-success-message{
+    margin: 0 0 14px 0;
+    color: #2E9C62;
+    font-size: 14px;
+}
+
+.stats-form{
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid #E5E7EB;
+}
+
+.stats-form h3{
+    margin: 0;
+    color: #333;
+}
+
+.stats-form input{
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: 2px solid #E5E7EB;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: .2s;
+}
+
+.stats-form input:focus{
+    outline: none;
+    border-color: #58C78D;
+    box-shadow: 0 0 8px rgba(88,199,141,.25);
+}
+
+.stats-form button{
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: #58C78D;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.stats-form button:hover{
+    background: #47b67c;
+    transform: translateY(-2px);
+}
+
+.stats-form button:disabled{
+    opacity: .7;
+    cursor: not-allowed;
+    transform: none;
+}
