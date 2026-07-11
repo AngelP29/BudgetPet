@@ -1,45 +1,60 @@
 .pet-card{
-
     background:white;
-
     border-radius:25px;
-
     padding:30px;
-
     text-align:center;
-
     margin-bottom:30px;
-
     box-shadow:0 12px 30px rgba(0,0,0,.12);
-
 }
 
 .pet-image{
-
     font-size:90px;
+    margin-bottom:10px;
+}
 
+.pet-card h2{
+    margin:10px 0 5px 0;
+    color:#333;
+}
+
+.pet-card p{
+    margin:6px 0;
+    color:#666;
+}
+
+.pet-level{
+    display:inline-block;
+    background:#4A7DF3;
+    color:white;
+    padding:6px 14px;
+    border-radius:20px;
+    font-weight:bold;
+    margin:8px 0 12px 0;
 }
 
 .mood-bar{
-
     margin-top:20px;
-
     height:20px;
-
     background:#E6E6E6;
-
     border-radius:20px;
-
     overflow:hidden;
-
 }
 
 .mood-fill{
-
-    width:75%;
-
     height:100%;
-
     background:#58C78D;
+    border-radius:20px;
+    transition:width .4s ease;
+}
 
+.pet-error-message{
+    color:#D64545;
+    margin-bottom:15px;
+    font-size:14px;
+}
+
+.pet-loading-message{
+    color:#666;
+    margin-bottom:15px;
+    font-size:14px;
 }
