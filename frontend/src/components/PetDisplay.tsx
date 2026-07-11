@@ -19,8 +19,6 @@ function PetDisplay({ refreshTrigger }: PetDisplayProps){
     const [pet, setPet] = useState<Pet | null>(null);
 
     const [errorMessage, setErrorMessage] = useState("");
-    const [successMessage, setSuccessMessage] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
     const [isFetchingPet, setIsFetchingPet] = useState(false);
 
     useEffect(() => {
