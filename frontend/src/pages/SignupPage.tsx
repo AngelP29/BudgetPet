@@ -2,7 +2,7 @@ import "./SignupPage.css";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
-import PageTitle from "../components/PageTitle";
+import PageTitle from "../components/Logo";
 
 function SignUp(){
     const navigate = useNavigate();
