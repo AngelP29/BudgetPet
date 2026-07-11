@@ -2,6 +2,57 @@ const express = require('express');
 const router = express.Router();
 const Expense = require('../models/Expense');
 const Pet = require('../models/Pet');
+const User = require('../models/User');
+
+async function updatePetHappiness(userId){
+    const user = await User.findById(userId);
+    const pet = await Pet.findOne({ userId });
+
+    if(!user || !pet){
+        return;
+    }
+
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+
+    const expenses = await Expense.find({
+        userId,
+        date: {
+            $gte: startOfMonth,
+            $lt: startOfNextMonth
+        }
+    });
+
+    const totalSpent = expenses.reduce(
+        (sum, expense) => sum + Number(expense.amount || 0),
+        0
+    );
+
+    const monthlyBudget = user.monthlyBudget || 0;
+
+    if(monthlyBudget <= 0){
+        pet.happiness = 100;
+    } else {
+        const percentUsed = totalSpent / monthlyBudget;
+
+        if (percentUsed <= 0.50) {
+            pet.happiness = 100;
+        } else if (percentUsed <= 0.75) {
+            pet.happiness = 85;
+        } else if (percentUsed <= 0.90) {
+            pet.happiness = 70;
+        } else if (percentUsed <= 1.00) {
+            pet.happiness = 50;
+        } else {
+            pet.happiness = 25;
+        }
+    }
+
+    await pet.save();
+
+    return pet;
+}
 
 // 1. ADD NEW EXPENSE (/api/expenses/add)
 router.post('/add', async (req, res) => {
@@ -20,11 +71,7 @@ router.post('/add', async (req, res) => {
         await newExpense.save();
 
         // GAMIFICATION STEP: Fetch user's pet and drop happiness slightly
-        const pet = await Pet.findOne({ userId });
-        if (pet) {
-            pet.happiness = Math.max(0, pet.happiness - 5); // Subtract 5 points, minimum 0
-            await pet.save();
-        }
+        const pet = await updatePetHappiness(userId);
 
         res.status(201).json({ message: "Expense logged!", expense: newExpense, currentPetHappiness: pet ? pet.happiness : 100 });
     } catch (err) {
@@ -68,9 +115,12 @@ router.put('/:expenseId', async (req, res) => {
 
         await expense.save();
 
+        const pet = await updatePetHappiness(userId);
+
         return res.json({
             message: "Expense updated successfully!",
-            expense
+            expense,
+            currentPetHappiness: pet ? pet.happiness : 100
         });
     } catch(err){
         res.status(500).json({ error: "Failed to modify expense: " + err.message });
@@ -93,7 +143,12 @@ router.delete('/:expenseId', async (req, res) => {
             return res.status(404).json({ error: "Expense not found." });
         }
 
-        return res.json({ message: "Expense deleted successfully!" });
+        const pet = await updatePetHappiness(userId);
+
+        return res.json({ 
+            message: "Expense deleted successfully!",
+            currentPetHappiness: pet ? pet.happiness : 100
+         });
     } catch(err){
         res.status(500).json({ error: "Failed to delete expense: " + err.message });
     }
