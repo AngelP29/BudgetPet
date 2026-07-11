@@ -1,0 +1,35 @@
+
+
+.logo-container{
+
+    display:flex;
+    align-items: center;
+    flex-direction:column;
+}
+
+.logo-container img{
+    height: 200px;
+    width: 200px;
+}
+
+.hero-title{
+
+    margin: 0px;
+
+    text-align:center;
+
+    color:#000;
+
+    margin-bottom:10px;
+}
+
+.hero-subtitle{
+
+    margin: 0px;
+
+    text-align:center;
+
+    color:#000;
+
+    margin-bottom:10px;
+}
