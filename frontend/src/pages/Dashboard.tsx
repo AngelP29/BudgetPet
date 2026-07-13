@@ -7,6 +7,9 @@ import Expenses from "../components/Expenses";
 import PetChat from "../components/PetChat";
 import QuickStats from "../components/QuickStats";
 
+import bg from "../public/BGMain.png"
+import "../components/Background.css"
+
 function Dashboard() {
     const username = localStorage.getItem("username") || "User";
     const navigate = useNavigate();
@@ -27,6 +30,12 @@ function Dashboard() {
 
     return (
         <div className="dashboard">
+
+            <div className="background">
+
+                <img src={bg} alt="Background"></img>
+
+            </div>
 
             <header className="dashboard-header">
 

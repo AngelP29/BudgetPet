@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 
 import "./PetDisplay.css"
+import logoApp from "../public/MoneteeLogo.png"
 
 type Pet = {
     name: string;
@@ -61,10 +62,11 @@ function PetDisplay({ refreshTrigger }: PetDisplayProps){
             {errorMessage && <p className="pet-error-message">{errorMessage}</p>}
             {isFetchingPet && <p className="pet-loading-message">Loading pet...</p>}
 
-            <div className="pet-image">
-
-                🐶
-
+            <div className="logo-container">
+                    
+                <img src={logoApp} alt="Manatee Website Logo">
+                </img>
+        
             </div>
 
             <h2>{pet?.name ?? "BudgetPet"}</h2>
