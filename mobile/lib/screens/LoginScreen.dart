@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'DashboardScreen.dart';
+import 'SignupScreen.dart';
 import 'dart:ui';
+
+late final AnimationController _floatController;
+late final Animation<double> _floatAnimation;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,13 +16,35 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen>
+  with SingleTickerProviderStateMixin {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
   String errorMessage = "";
   String successMessage = "";
   bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _floatController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
+    _floatAnimation = Tween<double>(
+      begin: -5,
+      end: 5,
+    ).animate(
+      CurvedAnimation(
+        parent: _floatController,
+        curve: Curves.easeInOut,
+      ),
+    );
+  }
+
+
+
 
   Future<void> handleLogin() async {
     setState(() {
@@ -109,6 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
+    _floatController.dispose();
     usernameController.dispose();
     passwordController.dispose();
     super.dispose();
@@ -173,11 +200,23 @@ Widget build(BuildContext context) {
               ),
               child: Column(
                 children: [
-                  Image.asset(
-                    "assets/images/MoneteeLogo.png",
-                    width: 240,
-                    height: 240,
-                    fit: BoxFit.contain,
+                  AnimatedBuilder(
+                    animation: _floatAnimation,
+                    builder: (context, child) {
+                      return Transform.translate(
+                        offset: Offset(0, _floatAnimation.value),
+                        child: Transform.rotate(
+                          angle: _floatAnimation.value * 0.003,
+                          child: child,
+                        ),
+                      );
+                    },
+                    child: Image.asset(
+                      "assets/images/MoneteeLogo.png",
+                      width:240,
+                      height:240,
+                      fit: BoxFit.contain,
+                    ),
                   ),
 
                   const SizedBox(height: 4),
@@ -326,7 +365,12 @@ Widget build(BuildContext context) {
                             ),
                             TextButton(
                               onPressed: () {
-                                // Navigate to SignupScreen later
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const SignupScreen(),
+                                  ),
+                                );
                               },
                               style: TextButton.styleFrom(
                                 foregroundColor: const Color(0xFF4A7DF3),
