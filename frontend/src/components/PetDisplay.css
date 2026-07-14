@@ -1,10 +1,10 @@
 .pet-card{
-    background:white;
+    background:rgba(255,255,255,.88); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
     border-radius:25px;
-    padding:30px;
+    padding:22px 28px;
     text-align:center;
     margin-bottom:30px;
-    box-shadow:0 12px 30px rgba(0,0,0,.12);
+    box-shadow:0 10px 30px rgba(26,90,120,.18);
 }
 
 .pet-image{
@@ -13,7 +13,8 @@
 }
 
 .pet-card h2{
-    margin:10px 0 5px 0;
+    margin:12px 0 2px;
+    font-size:2rem;
     color:#333;
 }
 
@@ -24,7 +25,7 @@
 
 .pet-level{
     display:inline-block;
-    background:#4A7DF3;
+    background:#4FD3D9;
     color:white;
     padding:6px 14px;
     border-radius:20px;
@@ -60,13 +61,26 @@
 }
 
 .logo-container{
-
     display:flex;
     align-items: center;
     flex-direction:column;
 }
 
 .logo-container img{
-    height: 200px;
-    width: 200px;
+    width:170px;
+    height:auto;
+
+    animation: float 5s ease-in-out infinite;
+}
+/* pet logo floating animation */
+@keyframes float{
+    0%{
+        transform:translateY(0px);
+    }
+    50%{
+        transform:translateY(-8px);
+    }
+    100%{
+        transform:translateY(0px);
+    }
 }

@@ -1,4 +1,7 @@
 /* ---------- Stats ---------- */
+.stats-card{
+    background:rgba(255,255,255,.88); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+}
 
 .stats-grid {
     display: grid;
@@ -8,7 +11,7 @@
 }
 
 .stat-box {
-    background: #F4F7FA;
+    background: #ffffff;
     border-radius: 18px;
     padding: 25px;
     text-align: center;
@@ -77,7 +80,7 @@
     padding: 14px;
     border: none;
     border-radius: 12px;
-    background: #58C78D;
+    background: #53C9A8;
     color: white;
     font-size: 16px;
     font-weight: bold;

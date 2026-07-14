@@ -1,5 +1,5 @@
 .chat-card{
-    background:white;
+    background:rgba(255,255,255,.88); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
     border-radius:24px;
     padding:30px;
     box-shadow:0 15px 35px rgba(0,0,0,.12);
@@ -12,7 +12,7 @@
 }
 
 .chat-box{
-    background:#F5F7FA;
+    background:#ffffff;
     border-radius:15px;
     padding:18px;
     min-height:150px;
@@ -51,7 +51,7 @@
     padding:14px;
     border:none;
     border-radius:12px;
-    background:#4A7DF3;
+    background:#53C9A8;
     color:white;
     font-weight:bold;
     font-size:15px;
@@ -60,7 +60,7 @@
 }
 
 .chat-form button:hover{
-    background:#3b6ee6;
+    background:#47b67c;
     transform:translateY(-2px);
 }
 

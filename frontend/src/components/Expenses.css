@@ -1,5 +1,5 @@
 .expense-card{
-    background:white;
+    background:rgba(255,255,255,.88); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
     border-radius:24px;
     padding:30px;
     margin-bottom:30px;
@@ -47,7 +47,7 @@
     padding:14px;
     border:none;
     border-radius:12px;
-    background:#58C78D;
+    background:#53C9A8;
     color:white;
     font-size:16px;
     font-weight:bold;
@@ -150,11 +150,11 @@
 }
 
 .manage-button{
-    background:#4A7DF3 !important;
+    background:#53C9A8 !important;
 }
 
 .manage-button:hover{
-    background:#3b6ad9 !important;
+    background:#47b67c !important;
 }
 
 .edit-button{
