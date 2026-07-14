@@ -8,8 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'DashboardScreen.dart';
 import 'LoginScreen.dart';
 
-late final AnimationController _floatController;
-late final Animation<double> _floatAnimation;
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -20,6 +18,8 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen>
     with SingleTickerProviderStateMixin {
+  late final AnimationController _floatController;
+  late final Animation<double> _floatAnimation;
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final usernameController = TextEditingController();

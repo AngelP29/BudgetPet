@@ -6,8 +6,7 @@ import 'DashboardScreen.dart';
 import 'SignupScreen.dart';
 import 'dart:ui';
 
-late final AnimationController _floatController;
-late final Animation<double> _floatAnimation;
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,6 +17,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen>
   with SingleTickerProviderStateMixin {
+  late final AnimationController _floatController;
+  late final Animation<double> _floatAnimation;
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
