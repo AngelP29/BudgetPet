@@ -1,4 +1,5 @@
 const express = require('express');
+const authenticateToken = require("../middleware/authenticateToken");
 const router = express.Router();
 const Expense = require('../models/Expense');
 const Pet = require('../models/Pet');
@@ -125,12 +126,13 @@ async function calculateExpenseExp(userId){
 }
 
 //add new expense (/api/expenses/add)
-router.post('/add', async (req, res) => {
+router.post('/add', authenticateToken, async (req, res) => {
     try {
-        const { userId, amount, category, description } = req.body;
+        const userId = req.user.userId;
+        const { amount, category, description } = req.body;
 
-        if (!userId || !amount || !category) {
-            return res.status(400).json({ error: "User, amount, and category are required." });
+        if (!amount || !category) {
+            return res.status(400).json({ error: "Amount and category are required." });
         }
 
         if (Number(amount) <= 0) {

@@ -98,10 +98,10 @@ function Expenses({ onExpenseChanged }: ExpensesProps){
             const response = await fetch("/api/expenses/add", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
                 },
                 body: JSON.stringify({
-                    userId,
                     amount: Number(amount),
                     category: item.trim(),
                     description: description.trim()
