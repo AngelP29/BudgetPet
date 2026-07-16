@@ -40,7 +40,7 @@ function Dashboard() {
             <header className="dashboard-header">
 
                 <div className="logo">
-                    🐾 <span>BudgetPet</span>
+                    🦭 <span>BudgetPet</span>
                 </div>
 
                 <div className="header-right">
