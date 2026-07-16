@@ -69,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen>
       });
 
       final response = await http.post(
-        Uri.parse("http://192.241.249.164/api/auth/login"),
+        Uri.parse("http://monetee.xyz/api/auth/login"),
         headers: {
           "Content-Type": "application/json",
         },
