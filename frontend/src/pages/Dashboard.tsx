@@ -9,6 +9,7 @@ import QuickStats from "../components/QuickStats";
 
 import bg from "../public/BGMain.png"
 import "../components/Background.css"
+import Logo from "../public/MoneteeLogo.png";
 
 function Dashboard() {
     const username = localStorage.getItem("username") || "User";
@@ -34,13 +35,14 @@ function Dashboard() {
             <div className="background">
 
                 <img src={bg} alt="Background"></img>
-
+                
             </div>
 
             <header className="dashboard-header">
 
                 <div className="logo">
-                    🦭 <span>BudgetPet</span>
+                    <img src={Logo} alt="Monatee Logo"></img>
+                    <span>BudgetPet</span>
                 </div>
 
                 <div className="header-right">
