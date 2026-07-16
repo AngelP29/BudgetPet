@@ -11,6 +11,12 @@ const UserSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true
+    },
     email: {
         type: String,
         required: true,
@@ -29,6 +35,14 @@ const UserSchema = new mongoose.Schema({
     verificationToken: {
         type: String,
         default: ''
+    },
+    monthlyBudget: {
+        type: Number,
+        default: 0
+    },
+    monthlySavingsGoal: {
+        type: Number,
+        default: 0
     }
 }, { timestamps: true });
 

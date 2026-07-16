@@ -1,0 +1,79 @@
+.chat-card{
+    background:rgba(255,255,255,.88); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border-radius:24px;
+    padding:30px;
+    box-shadow:0 15px 35px rgba(0,0,0,.12);
+}
+
+.chat-card h2{
+    margin-top:0;
+    margin-bottom:8px;
+    color:#333;
+}
+
+.chat-box{
+    background:#ffffff;
+    border-radius:15px;
+    padding:18px;
+    min-height:150px;
+    margin:20px 0 14px 0;
+    overflow-y:auto;
+    line-height:1.5;
+    color:#333;
+}
+
+/* new form wrapper for submit handling */
+.chat-form{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+/* keep your existing input styling, but move it to the form input */
+.chat-form input{
+    width:100%;
+    padding:14px;
+    border-radius:12px;
+    border:2px solid #E5E7EB;
+    box-sizing:border-box;
+    font-size:15px;
+    transition:.2s;
+}
+
+.chat-form input:focus{
+    outline:none;
+    border-color:#58C78D;
+    box-shadow:0 0 8px rgba(88,199,141,.25);
+}
+
+.chat-form button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:#53C9A8;
+    color:white;
+    font-weight:bold;
+    font-size:15px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.chat-form button:hover{
+    background:#47b67c;
+    transform:translateY(-2px);
+}
+
+.chat-form button:disabled{
+    opacity:.7;
+    cursor:not-allowed;
+    transform:none;
+}
+
+/* inline error message under the chat box */
+.chat-error-message{
+    margin:0 0 12px 0;
+    color:#D64545;
+    font-size:14px;
+    line-height:1.4;
+}

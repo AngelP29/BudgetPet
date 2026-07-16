@@ -1,0 +1,126 @@
+/* ---------- Header ---------- */
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
+}
+
+.logo {
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo img{
+    width: 125px;
+    height: 125px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.profile-button {
+    background: white;
+    color: #333;
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-weight: bold;
+    box-shadow: 0 6px 16px rgba(0,0,0,.12);
+}
+
+.logout-button {
+    background: #4A7DF3;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 999px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(0,0,0,.12);
+    transition: .2s;
+}
+
+.logout-button:hover {
+    background: #3a68d4;
+    transform: translateY(-2px);
+}
+
+/* ---------- Welcome ---------- */
+
+.welcome-message {
+    color: white;
+    font-size: 32px;
+    margin-bottom: 30px;
+}
+
+/* ---------- Pet Home ---------- */
+
+.pet-home {
+    margin-bottom: 35px;
+}
+
+/* ---------- Grid ---------- */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 30px;
+    margin-bottom: 35px;
+}
+
+/* ---------- Shared Cards ---------- */
+
+.card {
+    background: white;
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 15px 35px rgba(0,0,0,.12);
+}
+
+.card h2 {
+    margin-top: 0;
+    color: #333;
+}
+
+/* ---------- Expense Section ---------- */
+
+.expense-section {
+    margin-bottom: 35px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+    .dashboard {
+        padding: 20px;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+
+    .header-right {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .profile-button,
+    .logout-button {
+        width: 100%;
+        text-align: center;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
