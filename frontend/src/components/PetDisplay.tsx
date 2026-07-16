@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 
 import "./PetDisplay.css"
-import logoApp from "../public/MoneteeLogo.png"
+import petImg from "../public/Monetee.png"
 
 type Pet = {
     name: string;
@@ -64,7 +64,7 @@ function PetDisplay({ refreshTrigger }: PetDisplayProps){
 
             <div className="logo-container">
                     
-                <img src={logoApp} alt="Manatee Website Logo">
+                <img src={petImg} alt="Monetee, the virtual pet">
                 </img>
         
             </div>
