@@ -1,5 +1,6 @@
 .pet-card{
-    background:rgba(255,255,255,.88); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    background: #fff;
+    background-color: transparent;
     border-radius:25px;
     padding:22px 28px;
     text-align:center;
@@ -20,7 +21,7 @@
 
 .pet-card p{
     margin:6px 0;
-    color:#666;
+    color:#ffffff;
 }
 
 .pet-level{
@@ -67,7 +68,7 @@
 }
 
 .logo-container img{
-    width:170px;
+    width:250px;
     height:auto;
 
     animation: float 5s ease-in-out infinite;

@@ -5,7 +5,6 @@ import "./PetDisplay.css"
 import petImg from "../public/Monetee.png"
 
 type Pet = {
-    name: string;
     level: number;
     exp: number;
     happiness: number;
@@ -69,7 +68,7 @@ function PetDisplay({ refreshTrigger }: PetDisplayProps){
         
             </div>
 
-            <h2>{pet?.name ?? "BudgetPet"}</h2>
+            <h2>{"Monetee"}</h2>
 
             <div className="pet-level">
                 ⭐ Level {pet?.level ?? 1}
