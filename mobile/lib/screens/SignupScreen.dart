@@ -81,7 +81,7 @@ class _SignupScreenState extends State<SignupScreen>
       });
 
       final response = await http.post(
-        Uri.parse("http://192.241.249.164/api/auth/register"),
+        Uri.parse("https://monetee.xyz/api/auth/register"),
         headers: {
           "Content-Type": "application/json",
         },

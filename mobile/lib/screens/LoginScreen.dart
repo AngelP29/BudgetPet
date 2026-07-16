@@ -45,8 +45,6 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
 
-
-
   Future<void> handleLogin() async {
     setState(() {
       errorMessage = "";
@@ -69,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen>
       });
 
       final response = await http.post(
-        Uri.parse("http://monetee.xyz/api/auth/login"),
+        Uri.parse("https://monetee.xyz/api/auth/login"),
         headers: {
           "Content-Type": "application/json",
         },
