@@ -4,7 +4,7 @@ import { useState } from "react";
 function PetChat(){
     const [message, setMessage] = useState("");
     const [petReply, setPetReply] = useState(
-        "🐶 Hello! Great job staying on budget today."
+        "Hey! Ready to float through your finances today?"
     );
 
     const [errorMessage, setErrorMessage] = useState("");
