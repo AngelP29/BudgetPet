@@ -38,18 +38,15 @@ function Expenses({ onExpenseChanged }: ExpensesProps){
     const [editDescription, setEditDescription] = useState("");
 
     async function loadExpenses(){
-        const userId = localStorage.getItem("userId");
-
-        if(!userId){
-            setErrorMessage("No logged-in user found.");
-            return;
-        }
-
         try{
             setIsFetchingExpenses(true);
             setErrorMessage("");
 
-            const response = await fetch(`/api/expenses/${userId}`);
+            const response = await fetch("/api/expenses/", {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+            });
             const data = await response.json();
 
             if (!response.ok) {
@@ -75,10 +72,10 @@ function Expenses({ onExpenseChanged }: ExpensesProps){
         setErrorMessage("");
         setSuccessMessage("");
 
-        const userId = localStorage.getItem("userId");
+        const token = localStorage.getItem("token");
 
-        if (!userId) {
-            setErrorMessage("No logged-in user found.");
+        if (!token) {
+            setErrorMessage("Token Error: Please log in.");
             return;
         }
 
@@ -99,7 +96,7 @@ function Expenses({ onExpenseChanged }: ExpensesProps){
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                    Authorization: `Bearer ${ token }`
                 },
                 body: JSON.stringify({
                     amount: Number(amount),
@@ -154,10 +151,10 @@ function Expenses({ onExpenseChanged }: ExpensesProps){
     }
 
     async function saveEditedExpense(expenseId: string){
-        const userId = localStorage.getItem("userId");
+        const token = localStorage.getItem("token");
 
-        if(!userId){
-            setErrorMessage("No logged-in user found.");
+        if (!token) {
+            setErrorMessage("Please log in.");
             return;
         }
 
@@ -179,10 +176,10 @@ function Expenses({ onExpenseChanged }: ExpensesProps){
             const response = await fetch(`/api/expenses/${expenseId}`, {
                 method: "PUT",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${ token }`
                 },
                 body: JSON.stringify({
-                    userId,
                     amount: Number(editAmount),
                     category: editItem.trim(),
                     description: editDescription.trim()
@@ -209,10 +206,10 @@ function Expenses({ onExpenseChanged }: ExpensesProps){
     }
 
     async function deleteExpense(expenseId: string){
-        const userId = localStorage.getItem("userId");
+        const token = localStorage.getItem("token");
 
-        if(!userId){
-            setErrorMessage("No logged-in user found.");
+        if (!token) {
+            setErrorMessage("Please log in.");
             return;
         }
 
@@ -226,12 +223,12 @@ function Expenses({ onExpenseChanged }: ExpensesProps){
             setErrorMessage("");
             setSuccessMessage("");
             
-            const response = await fetch(`api/expenses/${expenseId}`, {
+            const response = await fetch(`/api/expenses/${expenseId}`, {
                 method: "DELETE",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${ token }`
                 },
-                body: JSON.stringify({ userId })
             });
 
             const data = await response.json();

@@ -161,9 +161,10 @@ router.post('/add', authenticateToken, async (req, res) => {
 });
 
 //load expense(s) (/api/expenses/:userId)
-router.get('/:userId', async (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
     try {
-        const expenses = await Expense.find({ userId: req.params.userId }).sort({ date: -1 });
+        const userId = req.user.userId;
+        const expenses = await Expense.find({ userId }).sort({ date: -1 });
         res.json(expenses);
     } catch (err) {
         res.status(500).json({ error: "Failed to load expenses: " + err.message });
@@ -171,13 +172,14 @@ router.get('/:userId', async (req, res) => {
 });
 
 //update logged expense
-router.put('/:expenseId', async (req, res) => {
+router.put('/:expenseId', authenticateToken, async (req, res) => {
     try{
-        const { userId, amount, category, description } = req.body;
+        const userId = req.user.userId;
+        const { amount, category, description } = req.body;
         const { expenseId } = req.params;
 
-        if (!userId || !amount || !category) {
-            return res.status(400).json({ error: "User, amount, and category are required." });
+        if (!amount || !category) {
+            return res.status(400).json({ error: "Amount, and category are required." });
         }
 
         if (Number(amount) <= 0) {
@@ -238,14 +240,10 @@ router.put('/:expenseId', async (req, res) => {
 });
 
 //delete logged expense
-router.delete('/:expenseId', async (req, res) => {
+router.delete('/:expenseId', authenticateToken, async (req, res) => {
     try{
-        const { userId } = req.body;
+        const userId = req.user.userId;
         const { expenseId } = req.params;
-
-        if (!userId) {
-            return res.status(400).json({ error: "User ID is required." });
-        }
 
         const deletedExpense = await Expense.findOneAndDelete({ _id: expenseId, userId });
 
