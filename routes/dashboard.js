@@ -2,11 +2,12 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const Expense = require('../models/Expense');
+const authenticateToken = require("../middleware/authenticateToken");
 
 // GET quick stats for one user
-router.get('/:userId', async (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
     try {
-        const { userId } = req.params;
+        const userId = req.user.userId;
 
         const user = await User.findById(userId);
 
@@ -51,9 +52,9 @@ router.get('/:userId', async (req, res) => {
 });
 
 // UPDATE monthly budget + savings goal
-router.put('/:userId', async (req, res) => {
+router.put('/', authenticateToken, async (req, res) => {
     try {
-        const { userId } = req.params;
+        const userId = req.user.userId;
         const { monthlyBudget, monthlySavingsGoal } = req.body;
 
         if (monthlyBudget === undefined || monthlySavingsGoal === undefined) {

@@ -27,10 +27,10 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
     }, [refreshTrigger]);
 
     async function getQuickStats(){
-        const userId = localStorage.getItem("userId");
+        const token = localStorage.getItem("token");
 
-        if (!userId) {
-            setErrorMessage("No logged-in user found.");
+        if (!token) {
+            setErrorMessage("Please log in.");
             return;
         }
 
@@ -40,7 +40,11 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
         try{
             setIsLoading(true);
 
-            const response = await fetch(`/api/dashboard/${userId}`);
+            const response = await fetch("/api/dashboard", {
+                headers: {
+                    Authorization: `Bearer ${ token }`
+                }
+            });
             const data: QuickStatsResponse | { error: string } = await response.json();
 
             if (!response.ok) {
@@ -66,14 +70,14 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
     }
 
     async function updateGoals(event: React.FormEvent<HTMLFormElement>){
-        event.preventDefault();
+        const token = localStorage.getItem("token");
 
-        const userId = localStorage.getItem("userId");
-
-        if (!userId) {
-            setErrorMessage("No logged-in user found.");
+        if (!token) {
+            setErrorMessage("Please log in.");
             return;
         }
+
+        event.preventDefault();
 
         setErrorMessage("");
         setSuccessMessage("");
@@ -91,10 +95,11 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
         try {
             setIsLoading(true);
 
-            const response = await fetch(`/api/dashboard/${userId}`, {
+            const response = await fetch("/api/dashboard", {
                 method: "PUT",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${ token }`
                 },
                 body: JSON.stringify({
                     monthlyBudget: Number(monthlyBudget),

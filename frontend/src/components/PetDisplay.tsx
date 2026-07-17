@@ -26,10 +26,10 @@ function PetDisplay({ refreshTrigger }: PetDisplayProps){
     }, [refreshTrigger]);
 
     async function loadPet(){
-        const userId = localStorage.getItem("userId");
+        const token = localStorage.getItem("token");
 
-        if(!userId){
-            setErrorMessage("No logged-in user found.");
+        if (!token) {
+            setErrorMessage("Please log in.");
             return;
         }
 
@@ -37,7 +37,11 @@ function PetDisplay({ refreshTrigger }: PetDisplayProps){
             setIsFetchingPet(true);
             setErrorMessage("");
 
-            const response = await fetch(`/api/pets/${userId}`);
+            const response = await fetch("/api/pets", {
+                headers: {
+                    Authorization: `Bearer ${ token }`
+                }
+            });
             const data = await response.json();
 
             if (!response.ok) {
