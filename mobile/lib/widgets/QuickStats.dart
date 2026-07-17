@@ -70,7 +70,7 @@ class _QuickStatsState extends State<QuickStats> {
       }
 
       final response = await http.get(
-        Uri.parse("http://192.241.249.164/api/dashboard/$userId"),
+        Uri.parse("https://monetee.xyz/api/dashboard/$userId"),
       );
 
       final dynamic decodedBody = jsonDecode(response.body);

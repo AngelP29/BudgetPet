@@ -80,7 +80,7 @@ class _PetDisplayState extends State<PetDisplay>
       });
 
       final response = await http.get(
-        Uri.parse("http://192.241.249.164/api/pets/$userId"),
+        Uri.parse("https://monetee.xyz/api/pets/$userId"),
       );
 
       final dynamic decodedBody = jsonDecode(response.body);

@@ -14,7 +14,7 @@ class PetChat extends StatefulWidget {
 class _PetChatState extends State<PetChat> {
   final messageController = TextEditingController();
 
-  String petReply = "🐶 Hello! Great job staying on budget today.";
+  String petReply = "Hello! Great job staying on budget today.";
   String errorMessage = "";
   bool isLoading = false;
 
@@ -38,7 +38,7 @@ class _PetChatState extends State<PetChat> {
       });
 
       final response = await http.post(
-        Uri.parse("http://192.241.249.164/api/pets/chat"),
+        Uri.parse("https://monetee.xyz/api/pets/chat"),
         headers: {
           "Content-Type": "application/json",
         },

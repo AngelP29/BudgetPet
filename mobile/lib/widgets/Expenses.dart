@@ -37,7 +37,7 @@ class _ExpensesState extends State<Expenses> {
   String? activeExpenseId;
   String? editingExpenseId;
 
-  static const String baseUrl = "http://192.241.249.164";
+  static const String baseUrl = "https://monetee.xyz";
 
   @override
   void initState() {
