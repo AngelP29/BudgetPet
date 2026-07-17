@@ -11,6 +11,13 @@ function PetChat(){
     const [isLoading, setIsLoading] = useState(false);
 
     async function petConversation(event: React.FormEvent<HTMLFormElement>){
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            setErrorMessage("Please log in.");
+            return;
+        }
+
         event.preventDefault();
 
         setErrorMessage("");
@@ -26,7 +33,8 @@ function PetChat(){
             const response = await fetch("/api/pets/chat", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${ token }`
                 },
                 body: JSON.stringify({
                     message: message.trim(),
