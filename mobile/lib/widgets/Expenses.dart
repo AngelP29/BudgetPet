@@ -50,6 +50,11 @@ class _ExpensesState extends State<Expenses> {
     return preferences.getString("userId");
   }
 
+  Future<String?> getToken() async {
+    final preferences = await SharedPreferences.getInstance();
+    return preferences.getString("token");
+  }
+
   Future<void> loadExpenses() async {
     final userId = await getUserId();
 
@@ -131,6 +136,15 @@ class _ExpensesState extends State<Expenses> {
       return;
     }
 
+    final token = await getToken();
+    if (token == null || token.isEmpty) {
+      setState(() {
+        errorMessage = "Missing login token. Please log in again.";
+      });
+      return;
+    }
+
+
     final item = itemController.text.trim();
     final amountText = amountController.text.trim();
     final description = descriptionController.text.trim();
@@ -164,6 +178,7 @@ class _ExpensesState extends State<Expenses> {
         Uri.parse("$baseUrl/api/expenses/add"),
         headers: {
           "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
         },
         body: jsonEncode({
           "userId": userId,
@@ -266,6 +281,15 @@ class _ExpensesState extends State<Expenses> {
       return;
     }
 
+    final token = await getToken();
+    if (token == null || token.isEmpty) {
+      setState(() {
+        errorMessage = "Missing login token. Please log in again.";
+      });
+      return;
+    
+    }
+
     final item = editItemController.text.trim();
     final amountText = editAmountController.text.trim();
     final description = editDescriptionController.text.trim();
@@ -296,6 +320,7 @@ class _ExpensesState extends State<Expenses> {
         Uri.parse("$baseUrl/api/expenses/$expenseId"),
         headers: {
           "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
         },
         body: jsonEncode({
           "userId": userId,
@@ -386,6 +411,15 @@ class _ExpensesState extends State<Expenses> {
       return;
     }
 
+    final token = await getToken();
+
+    if (token == null || token.isEmpty) {
+      setState(() {
+        errorMessage = "Missing login token. Please log in again.";
+      });
+      return;
+    }
+
     try {
       setState(() {
         isLoading = true;
@@ -399,6 +433,7 @@ class _ExpensesState extends State<Expenses> {
       );
 
       request.headers["Content-Type"] = "application/json";
+      request.headers["Authorization"] = "Bearer $token";
       request.body = jsonEncode({
         "userId": userId,
       });
@@ -710,12 +745,15 @@ class _ExpensesState extends State<Expenses> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Add Expense",
-                style: TextStyle(
-                  color: Color(0xFF333333),
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+              Center(
+                child: Text(
+                  "Add Expense",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF333333),
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               if (errorMessage.isNotEmpty) ...[

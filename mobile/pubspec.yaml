@@ -64,6 +64,7 @@ flutter:
   assets:
     - assets/images/MoneteeLogo.png
     - assets/images/BGMain.png
+    - assets/images/Monetee.png
 
 
   # To add assets to your application, add an assets section, like this:

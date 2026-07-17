@@ -23,10 +23,14 @@ class _QuickStatsState extends State<QuickStats> {
 
   double totalSpent = 0;
   double budgetRemaining = 0;
+  double monthlyBudget = 0;
+  double monthlySavingsGoal = 0;
 
   String errorMessage = "";
   String successMessage = "";
-  bool isLoading = false;
+
+  bool isFetchingStats = false;
+  bool isSavingGoals = false;
 
   @override
   void initState() {
@@ -52,20 +56,22 @@ class _QuickStatsState extends State<QuickStats> {
     final userId = await getUserId();
 
     if (userId == null || userId.isEmpty) {
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
 
       setState(() {
         errorMessage = "No logged-in user found.";
       });
+
       return;
     }
 
     try {
       if (mounted) {
         setState(() {
-          isLoading = true;
+          isFetchingStats = true;
           errorMessage = "";
-          successMessage = "";
         });
       }
 
@@ -74,39 +80,50 @@ class _QuickStatsState extends State<QuickStats> {
       );
 
       final dynamic decodedBody = jsonDecode(response.body);
+
       final Map<String, dynamic> data =
-          decodedBody is Map<String, dynamic> ? decodedBody : {};
+          decodedBody is Map<String, dynamic>
+              ? decodedBody
+              : <String, dynamic>{};
 
       if (response.statusCode != 200) {
-        if (!mounted) return;
+        if (!mounted) {
+          return;
+        }
 
         setState(() {
           errorMessage =
-              data["error"]?.toString() ?? "Failed to load quick stats.";
+              data["error"]?.toString() ??
+              "Failed to load quick stats.";
         });
+
         return;
       }
 
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
 
       setState(() {
-        monthlyBudgetController.text =
-            _toDouble(data["monthlyBudget"]).toStringAsFixed(2);
+        monthlyBudget = _toDouble(data["monthlyBudget"]);
 
-        monthlySavingsGoalController.text =
-            _toDouble(data["monthlySavingsGoal"]).toStringAsFixed(2);
+        monthlySavingsGoal = _toDouble(data["monthlySavingsGoal"]);
 
         totalSpent = _toDouble(data["totalSpent"]);
         budgetRemaining = _toDouble(data["budgetRemaining"]);
       });
     } on FormatException {
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
 
       setState(() {
         errorMessage = "The server returned an invalid response.";
       });
     } catch (error) {
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
 
       setState(() {
         errorMessage = "Unable to load quick stats right now.";
@@ -114,7 +131,7 @@ class _QuickStatsState extends State<QuickStats> {
     } finally {
       if (mounted) {
         setState(() {
-          isLoading = false;
+          isFetchingStats = false;
         });
       }
     }
@@ -124,9 +141,14 @@ class _QuickStatsState extends State<QuickStats> {
     final userId = await getUserId();
 
     if (userId == null || userId.isEmpty) {
+      if (!mounted) {
+        return;
+      }
+
       setState(() {
         errorMessage = "No logged-in user found.";
       });
+
       return;
     }
 
@@ -142,6 +164,7 @@ class _QuickStatsState extends State<QuickStats> {
       setState(() {
         errorMessage = "Please enter both budget and savings goal.";
       });
+
       return;
     }
 
@@ -152,23 +175,26 @@ class _QuickStatsState extends State<QuickStats> {
       setState(() {
         errorMessage = "Please enter valid numbers.";
       });
+
       return;
     }
 
     if (monthlyBudget < 0 || monthlySavingsGoal < 0) {
       setState(() {
-        errorMessage = "Budget and savings goal must be 0 or greater.";
+        errorMessage =
+            "Budget and savings goal must be 0 or greater.";
       });
+
       return;
     }
 
     try {
       setState(() {
-        isLoading = true;
+        isSavingGoals = true;
       });
 
       final response = await http.put(
-        Uri.parse("http://192.241.249.164/api/dashboard/$userId"),
+        Uri.parse("https://monetee.xyz/api/dashboard/$userId"),
         headers: {
           "Content-Type": "application/json",
         },
@@ -179,34 +205,50 @@ class _QuickStatsState extends State<QuickStats> {
       );
 
       final dynamic decodedBody = jsonDecode(response.body);
+
       final Map<String, dynamic> data =
-          decodedBody is Map<String, dynamic> ? decodedBody : {};
+          decodedBody is Map<String, dynamic>
+              ? decodedBody
+              : <String, dynamic>{};
 
       if (response.statusCode != 200) {
-        if (!mounted) return;
+        if (!mounted) {
+          return;
+        }
 
         setState(() {
           errorMessage =
-              data["error"]?.toString() ?? "Failed to update goals.";
+              data["error"]?.toString() ??
+              "Failed to update goals.";
         });
+
         return;
       }
 
-      if (!mounted) return;
+      await getQuickStats();
+
+      if (!mounted) {
+        return;
+      }
 
       setState(() {
         successMessage = "Goals updated successfully!";
-      });
 
-      await getQuickStats();
+        monthlyBudgetController.clear();
+        monthlySavingsGoalController.clear();
+      });
     } on FormatException {
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
 
       setState(() {
         errorMessage = "The server returned an invalid response.";
       });
     } catch (error) {
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
 
       setState(() {
         errorMessage = "Unable to update goals right now.";
@@ -214,7 +256,7 @@ class _QuickStatsState extends State<QuickStats> {
     } finally {
       if (mounted) {
         setState(() {
-          isLoading = false;
+          isSavingGoals = false;
         });
       }
     }
@@ -249,6 +291,20 @@ class _QuickStatsState extends State<QuickStats> {
           width: 2,
         ),
       ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(
+          color: Color(0xFFD64545),
+          width: 2,
+        ),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(
+          color: Color(0xFFD64545),
+          width: 2,
+        ),
+      ),
     );
   }
 
@@ -257,19 +313,20 @@ class _QuickStatsState extends State<QuickStats> {
     required double value,
   }) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(25),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             "\$${value.toStringAsFixed(2)}",
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: Color(0xFF4A7DF3),
-              fontSize: 27,
+              fontSize: 30,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -279,6 +336,7 @@ class _QuickStatsState extends State<QuickStats> {
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: Color(0xFF666666),
+              fontSize: 14,
             ),
           ),
         ],
@@ -295,11 +353,6 @@ class _QuickStatsState extends State<QuickStats> {
 
   @override
   Widget build(BuildContext context) {
-    final monthlyBudget =
-        double.tryParse(monthlyBudgetController.text) ?? 0;
-
-    final monthlySavingsGoal =
-        double.tryParse(monthlySavingsGoalController.text) ?? 0;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(24),
@@ -325,12 +378,16 @@ class _QuickStatsState extends State<QuickStats> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Quick Stats",
-                style: TextStyle(
-                  color: Color(0xFF333333),
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+              Center(
+
+                child: Text(
+                  "Quick Stats",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF333333),
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
 
@@ -356,33 +413,57 @@ class _QuickStatsState extends State<QuickStats> {
                 ),
               ],
 
+              if (isFetchingStats) ...[
+                const SizedBox(height: 18),
+                const Center(
+                  child: CircularProgressIndicator(
+                    color: Color(0xFF53C9A8),
+                  ),
+                ),
+              ],
+
               const SizedBox(height: 20),
 
-              GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                childAspectRatio: 1.35,
-                children: [
-                  statBox(
-                    label: "Monthly Budget",
-                    value: monthlyBudget,
-                  ),
-                  statBox(
-                    label: "Savings Goal",
-                    value: monthlySavingsGoal,
-                  ),
-                  statBox(
-                    label: "Spent This Month",
-                    value: totalSpent,
-                  ),
-                  statBox(
-                    label: "Budget Remaining",
-                    value: budgetRemaining,
-                  ),
-                ],
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final cardWidth =
+                      (constraints.maxWidth - 20) / 2;
+
+                  return Wrap(
+                    spacing: 20,
+                    runSpacing: 20,
+                    children: [
+                      SizedBox(
+                        width: cardWidth,
+                        child: statBox(
+                          label: "Monthly Budget",
+                          value: monthlyBudget,
+                        ),
+                      ),
+                      SizedBox(
+                        width: cardWidth,
+                        child: statBox(
+                          label: "Savings Goal",
+                          value: monthlySavingsGoal,
+                        ),
+                      ),
+                      SizedBox(
+                        width: cardWidth,
+                        child: statBox(
+                          label: "Spent This Month",
+                          value: totalSpent,
+                        ),
+                      ),
+                      SizedBox(
+                        width: cardWidth,
+                        child: statBox(
+                          label: "Budget Remaining",
+                          value: budgetRemaining,
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
 
               const SizedBox(height: 28),
@@ -393,12 +474,16 @@ class _QuickStatsState extends State<QuickStats> {
 
               const SizedBox(height: 24),
 
-              const Text(
-                "Update Goals",
-                style: TextStyle(
-                  color: Color(0xFF333333),
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+              Center(
+
+                child:Text(
+                  "Update Goals",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF333333),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
 
@@ -419,7 +504,8 @@ class _QuickStatsState extends State<QuickStats> {
                 keyboardType: const TextInputType.numberWithOptions(
                   decimal: true,
                 ),
-                decoration: _inputDecoration("Monthly Savings Goal"),
+                decoration:
+                    _inputDecoration("Monthly Savings Goal"),
               ),
 
               const SizedBox(height: 14),
@@ -427,13 +513,16 @@ class _QuickStatsState extends State<QuickStats> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: isLoading ? null : updateGoals,
+                  onPressed:
+                      isSavingGoals ? null : updateGoals,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF53C9A8),
                     foregroundColor: Colors.white,
                     disabledBackgroundColor:
                         const Color(0xFF53C9A8).withOpacity(0.7),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 14,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -443,7 +532,9 @@ class _QuickStatsState extends State<QuickStats> {
                     ),
                   ),
                   child: Text(
-                    isLoading ? "Saving..." : "Save Goals",
+                    isSavingGoals
+                        ? "Saving..."
+                        : "Save Goals",
                   ),
                 ),
               ),
@@ -454,3 +545,4 @@ class _QuickStatsState extends State<QuickStats> {
     );
   }
 }
+

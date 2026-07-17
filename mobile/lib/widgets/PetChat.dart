@@ -14,7 +14,7 @@ class PetChat extends StatefulWidget {
 class _PetChatState extends State<PetChat> {
   final messageController = TextEditingController();
 
-  String petReply = "Hello! Great job staying on budget today.";
+  String petReply = "Hey! Ready to float through your finances today?";
   String errorMessage = "";
   bool isLoading = false;
 
@@ -153,12 +153,17 @@ class _PetChatState extends State<PetChat> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Pet Coach",
-                style: TextStyle(
-                  color: Color(0xFF333333),
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+
+              Center(
+
+                child: Text(
+                  "Pet Coach",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF333333),
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
 

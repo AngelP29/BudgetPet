@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -33,12 +32,12 @@ class _PetDisplayState extends State<PetDisplay>
 
     _floatController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 5),
+      duration: const Duration(seconds: 3),
     )..repeat(reverse: true);
 
     _floatAnimation = Tween<double>(
       begin: 0,
-      end: -8,
+      end: -12,
     ).animate(
       CurvedAnimation(
         parent: _floatController,
@@ -70,6 +69,7 @@ class _PetDisplayState extends State<PetDisplay>
       setState(() {
         errorMessage = "No logged-in user found.";
       });
+
       return;
     }
 
@@ -84,8 +84,11 @@ class _PetDisplayState extends State<PetDisplay>
       );
 
       final dynamic decodedBody = jsonDecode(response.body);
+
       final Map<String, dynamic> data =
-          decodedBody is Map<String, dynamic> ? decodedBody : {};
+          decodedBody is Map<String, dynamic>
+              ? decodedBody
+              : <String, dynamic>{};
 
       if (response.statusCode != 200) {
         if (!mounted) {
@@ -94,8 +97,10 @@ class _PetDisplayState extends State<PetDisplay>
 
         setState(() {
           errorMessage =
-              data["error"]?.toString() ?? "Failed to load pet information.";
+              data["error"]?.toString() ??
+              "Failed to load pet information.";
         });
+
         return;
       }
 
@@ -158,7 +163,10 @@ class _PetDisplayState extends State<PetDisplay>
       return value.toDouble().clamp(0, 100);
     }
 
-    return double.tryParse(value?.toString() ?? "")?.clamp(0, 100) ?? 100;
+    return double.tryParse(
+          value?.toString() ?? "",
+        )?.clamp(0, 100) ??
+        100;
   }
 
   @override
@@ -169,140 +177,130 @@ class _PetDisplayState extends State<PetDisplay>
 
   @override
   Widget build(BuildContext context) {
-    final petName = pet?["name"]?.toString() ?? "BudgetPet";
     final happiness = petHappiness;
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(25),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: 10,
-          sigmaY: 10,
-        ),
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(
-            horizontal: 28,
-            vertical: 22,
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 28,
+        vertical: 22,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF1A5A78).withOpacity(0.18),
+            blurRadius: 30,
+            offset: const Offset(0, 10),
           ),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.88),
-            borderRadius: BorderRadius.circular(25),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF1A5A78).withOpacity(0.18),
-                blurRadius: 30,
-                offset: const Offset(0, 10),
+        ],
+      ),
+      child: Column(
+        children: [
+          if (errorMessage.isNotEmpty) ...[
+            Text(
+              errorMessage,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Color(0xFFD64545),
+                fontSize: 14,
               ),
-            ],
+            ),
+            const SizedBox(height: 15),
+          ],
+
+          if (isFetchingPet) ...[
+            const Text(
+              "Loading pet...",
+              style: TextStyle(
+                color: Color(0xFF666666),
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(height: 15),
+          ],
+
+          AnimatedBuilder(
+            animation: _floatAnimation,
+            builder: (context, child) {
+              return Transform.translate(
+                offset: Offset(0, _floatAnimation.value),
+                child: child,
+              );
+            },
+            child: Image.asset(
+              "assets/images/Monetee.png",
+              width: 250,
+              height: 250,
+              fit: BoxFit.contain,
+            ),
           ),
-          child: Column(
-            children: [
-              if (errorMessage.isNotEmpty) ...[
-                Text(
-                  errorMessage,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Color(0xFFD64545),
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(height: 15),
-              ],
 
-              if (isFetchingPet) ...[
-                const Text(
-                  "Loading pet...",
-                  style: TextStyle(
-                    color: Color(0xFF666666),
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(height: 15),
-              ],
+          const SizedBox(height: 10),
 
-              AnimatedBuilder(
-                animation: _floatAnimation,
-                builder: (context, child) {
-                  return Transform.translate(
-                    offset: Offset(0, _floatAnimation.value),
-                    child: child,
-                  );
-                },
-                child: Image.asset(
-                  "assets/images/MoneteeLogo.png",
-                  width: 170,
-                  height: 170,
-                  fit: BoxFit.contain,
-                ),
-              ),
-
-              const SizedBox(height: 10),
-
-              Text(
-                petName,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Color(0xFF333333),
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              const SizedBox(height: 8),
-
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF4FD3D9),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  "⭐ Level $petLevel",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              Text(
-                "EXP: $petExp/100",
-                style: const TextStyle(
-                  color: Color(0xFF666666),
-                ),
-              ),
-
-              const SizedBox(height: 6),
-
-              Text(
-                "Happiness: ${happiness.round()}%",
-                style: const TextStyle(
-                  color: Color(0xFF666666),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: LinearProgressIndicator(
-                  value: happiness / 100,
-                  minHeight: 20,
-                  backgroundColor: const Color(0xFFE6E6E6),
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    Color(0xFF58C78D),
-                  ),
-                ),
-              ),
-            ],
+          const Text(
+            "Monetee",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Color(0xFF333333),
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
+
+          const SizedBox(height: 8),
+
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 6,
+            ),
+            decoration: BoxDecoration(
+              color: const Color(0xFF4FD3D9),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              "⭐ Level $petLevel",
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
+          Text(
+            "EXP: $petExp/100",
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+          ),
+
+          const SizedBox(height: 6),
+
+          Text(
+            "Happiness: ${happiness.round()}%",
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: LinearProgressIndicator(
+              value: happiness / 100,
+              minHeight: 20,
+              backgroundColor: const Color(0xFFE6E6E6),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                Color(0xFF58C78D),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
