@@ -59,6 +59,7 @@ function Login() {
             }, 700);
 
         } catch(err){
+            console.error(err);
             setErrorMessage("Error: Unable to connect to the server.");
         } finally{
             setIsLoading(false);
