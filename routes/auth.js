@@ -6,11 +6,7 @@ const User = require('../models/User');
 const Pet = require('../models/Pet');
 
 // Secret key for signing web tokens (In production, move this to your .env)
-const JWT_SECRET = process.env.JWT_SECRET;
-
-if (!JWT_SECRET) {
-    throw new Error("JWT_SECRET is not defined in the environment variables.");
-}
+const JWT_SECRET = "budgetpet_super_secret_key_12345";
 
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
 
