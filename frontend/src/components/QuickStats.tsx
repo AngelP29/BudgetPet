@@ -18,6 +18,10 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
     const [totalSpent, setTotalSpent] = useState(0);
     const [budgetRemaining, setBudgetRemaining] = useState(0);
 
+    // Separate input from saved quick stats to avoid overwriting the displayed values while typing
+    const [inputBudget, setInputBudget] = useState("");
+    const [inputSavingsGoal, setInputSavingsGoal] = useState("");
+
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -82,6 +86,9 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
         setErrorMessage("");
         setSuccessMessage("");
 
+        setMonthlyBudget(inputBudget);
+        setMonthlySavingsGoal(inputSavingsGoal);
+        
         if (!monthlyBudget.trim() || !monthlySavingsGoal.trim()) {
             setErrorMessage("Please enter both budget and savings goal.");
             return;
@@ -115,6 +122,9 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
             }
 
             setSuccessMessage("Goals updated successfully!");
+            setInputBudget("");
+            setInputSavingsGoal("");
+
             await getQuickStats();
 
         } catch (e) {
@@ -160,8 +170,8 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
                 <input
                     type="number"
                     placeholder="Monthly Budget"
-                    value={monthlyBudget}
-                    onChange={(e) => setMonthlyBudget(e.target.value)}
+                    value={inputBudget}
+                    onChange={(e) => setInputBudget(e.target.value)}
                     min="0"
                     step="0.01"
                 />
@@ -169,8 +179,8 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
                 <input
                     type="number"
                     placeholder="Monthly Savings Goal"
-                    value={monthlySavingsGoal}
-                    onChange={(e) => setMonthlySavingsGoal(e.target.value)}
+                    value={inputSavingsGoal}
+                    onChange={(e) => setInputSavingsGoal(e.target.value)}
                     min="0"
                     step="0.01"
                 />
