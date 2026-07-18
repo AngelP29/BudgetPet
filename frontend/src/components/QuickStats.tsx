@@ -162,7 +162,6 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
 
                 <input
                     type="number"
-                    value={monthlyBudget}
                     onChange={(e) => setMonthlyBudget(e.target.value)}
                     placeholder="Monthly Budget"
                     min="0"
@@ -171,7 +170,6 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
 
                 <input
                     type="number"
-                    value={monthlySavingsGoal}
                     onChange={(e) => setMonthlySavingsGoal(e.target.value)}
                     placeholder="Monthly Savings Goal"
                     min="0"
