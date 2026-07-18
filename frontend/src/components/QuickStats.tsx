@@ -86,12 +86,12 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
         setErrorMessage("");
         setSuccessMessage("");
 
-        if (!monthlyBudget.trim() || !monthlySavingsGoal.trim()) {
+        if (!inputBudget.trim() || !inputSavingsGoal.trim()) {
             setErrorMessage("Please enter both budget and savings goal.");
             return;
         }
 
-        if (Number(monthlyBudget) < 0 || Number(monthlySavingsGoal) < 0) {
+        if (Number(inputBudget) < 0 || Number(inputSavingsGoal) < 0) {
             setErrorMessage("Budget and savings goal must be 0 or greater.");
             return;
         }
