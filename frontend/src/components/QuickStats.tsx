@@ -86,9 +86,6 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
         setErrorMessage("");
         setSuccessMessage("");
 
-        setMonthlyBudget(inputBudget);
-        setMonthlySavingsGoal(inputSavingsGoal);
-        
         if (!monthlyBudget.trim() || !monthlySavingsGoal.trim()) {
             setErrorMessage("Please enter both budget and savings goal.");
             return;
@@ -109,8 +106,8 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
                     Authorization: `Bearer ${ token }`
                 },
                 body: JSON.stringify({
-                    monthlyBudget: Number(monthlyBudget),
-                    monthlySavingsGoal: Number(monthlySavingsGoal)
+                    monthlyBudget: Number(inputBudget),
+                    monthlySavingsGoal: Number(inputSavingsGoal)
                 })
             });
 
