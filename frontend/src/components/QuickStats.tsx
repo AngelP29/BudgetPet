@@ -58,8 +58,11 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
 
             const stats = data as QuickStatsResponse;
 
-            setMonthlyBudget(String(stats.monthlyBudget ?? 0));
-            setMonthlySavingsGoal(String(stats.monthlySavingsGoal ?? 0));
+            // No need to initialize to zero as they are being casted to a string.
+            // Fixes the issue of displaying "0" instead of the placeholder.
+            setMonthlyBudget(String(stats.monthlyBudget));
+            setMonthlySavingsGoal(String(stats.monthlySavingsGoal));
+            // These merit ?? 0 because they are treated as numbers. 
             setTotalSpent(stats.totalSpent ?? 0);
             setBudgetRemaining(stats.budgetRemaining ?? 0);
         } catch(e) {
@@ -159,18 +162,18 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
 
                 <input
                     type="number"
-                    placeholder="Monthly Budget"
                     value={monthlyBudget}
                     onChange={(e) => setMonthlyBudget(e.target.value)}
+                    placeholder="Monthly Budget"
                     min="0"
                     step="0.01"
                 />
 
                 <input
                     type="number"
-                    placeholder="Monthly Savings Goal"
                     value={monthlySavingsGoal}
                     onChange={(e) => setMonthlySavingsGoal(e.target.value)}
+                    placeholder="Monthly Savings Goal"
                     min="0"
                     step="0.01"
                 />
