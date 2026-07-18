@@ -79,8 +79,13 @@ function Expenses({ onExpenseChanged }: ExpensesProps){
             return;
         }
 
-        if (!item.trim() || !amount.trim()) {
-            setErrorMessage("Please fill in Item and Amount.");
+        if (!item.trim()) {
+            setErrorMessage("Please fill Item/Category field.");
+            return;
+        }
+
+        if (!amount.trim()) {
+            setErrorMessage("Please fill in Amount field.");
             return;
         }
 
