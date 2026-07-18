@@ -6,8 +6,8 @@ type QuickStatsProps = {
 };
 
 type QuickStatsResponse = {
-    monthlyBudget: number;
-    monthlySavingsGoal: number;
+    monthlyBudget: string;
+    monthlySavingsGoal: string;
     totalSpent: number;
     budgetRemaining: number;
 };
@@ -60,8 +60,8 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
 
             // No need to initialize to zero as they are being casted to a string.
             // Fixes the issue of displaying "0" instead of the placeholder.
-            setMonthlyBudget(String(stats.monthlyBudget));
-            setMonthlySavingsGoal(String(stats.monthlySavingsGoal));
+            setMonthlyBudget(String(stats.monthlyBudget ?? ""));
+            setMonthlySavingsGoal(String(stats.monthlySavingsGoal ?? ""));
             // These merit ?? 0 because they are treated as numbers. 
             setTotalSpent(stats.totalSpent ?? 0);
             setBudgetRemaining(stats.budgetRemaining ?? 0);
