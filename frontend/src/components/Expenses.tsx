@@ -213,7 +213,7 @@ function Expenses({ onExpenseChanged }: ExpensesProps){
             return;
         }
 
-        const confirmed = window.confirm("Are you sure you want to delte this expense?");
+        const confirmed = window.confirm("Are you sure you want to delete this expense?");
         if(!confirmed){
             return;
         }
