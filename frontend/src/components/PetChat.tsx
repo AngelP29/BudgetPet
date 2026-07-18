@@ -11,14 +11,14 @@ function PetChat(){
     const [isLoading, setIsLoading] = useState(false);
 
     async function petConversation(event: React.FormEvent<HTMLFormElement>){
+        event.preventDefault();
+
         const token = localStorage.getItem("token");
 
         if (!token) {
             setErrorMessage("Please log in.");
             return;
         }
-
-        event.preventDefault();
 
         setErrorMessage("");
 
@@ -30,7 +30,7 @@ function PetChat(){
         try{
             setIsLoading(true);
 
-            const response = await fetch("/api/pets/chat", {
+            const response = await fetch("/api/chat", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
