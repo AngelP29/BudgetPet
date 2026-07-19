@@ -18,6 +18,10 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
     const [totalSpent, setTotalSpent] = useState(0);
     const [budgetRemaining, setBudgetRemaining] = useState(0);
 
+    // Separate input from saved quick stats to avoid overwriting the displayed values while typing
+    const [inputBudget, setInputBudget] = useState("");
+    const [inputSavingsGoal, setInputSavingsGoal] = useState("");
+
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -85,12 +89,12 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
         setErrorMessage("");
         setSuccessMessage("");
 
-        if (!monthlyBudget.trim() || !monthlySavingsGoal.trim()) {
+        if (!inputBudget.trim() || !inputSavingsGoal.trim()) {
             setErrorMessage("Please enter both budget and savings goal.");
             return;
         }
 
-        if (Number(monthlyBudget) < 0 || Number(monthlySavingsGoal) < 0) {
+        if (Number(inputBudget) < 0 || Number(inputSavingsGoal) < 0) {
             setErrorMessage("Budget and savings goal must be 0 or greater.");
             return;
         }
@@ -105,8 +109,8 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
                     Authorization: `Bearer ${ token }`
                 },
                 body: JSON.stringify({
-                    monthlyBudget: Number(monthlyBudget),
-                    monthlySavingsGoal: Number(monthlySavingsGoal)
+                    monthlyBudget: Number(inputBudget),
+                    monthlySavingsGoal: Number(inputSavingsGoal)
                 })
             });
 
@@ -118,6 +122,9 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
             }
 
             setSuccessMessage("Goals updated successfully!");
+            setInputBudget("");
+            setInputSavingsGoal("");
+
             await getQuickStats();
 
         } catch (e) {
@@ -162,16 +169,18 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
 
                 <input
                     type="number"
-                    onChange={(e) => setMonthlyBudget(e.target.value)}
                     placeholder="Monthly Budget"
+                    value={inputBudget}
+                    onChange={(e) => setInputBudget(e.target.value)}
                     min="0"
                     step="0.01"
                 />
 
                 <input
                     type="number"
-                    onChange={(e) => setMonthlySavingsGoal(e.target.value)}
                     placeholder="Monthly Savings Goal"
+                    value={inputSavingsGoal}
+                    onChange={(e) => setInputSavingsGoal(e.target.value)}
                     min="0"
                     step="0.01"
                 />
