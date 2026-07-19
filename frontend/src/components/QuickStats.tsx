@@ -6,8 +6,8 @@ type QuickStatsProps = {
 };
 
 type QuickStatsResponse = {
-    monthlyBudget: string;
-    monthlySavingsGoal: string;
+    monthlyBudget: number;
+    monthlySavingsGoal: number;
     totalSpent: number;
     budgetRemaining: number;
 };
