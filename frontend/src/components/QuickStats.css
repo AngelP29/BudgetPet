@@ -1,6 +1,11 @@
 /* ---------- Stats ---------- */
 .stats-card{
-    background:rgba(255,255,255,.88); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    background: #fff;
+    background-color: transparent;
+}
+
+.stats-card h2{
+    color: #fff;
 }
 
 .stats-grid {
@@ -35,7 +40,7 @@
 
 .stats-error-message{
     margin: 0 0 14px 0;
-    color: #D64545;
+    color: #750000;
     font-size: 14px;
 }
 
@@ -56,31 +61,41 @@
 
 .stats-form h3{
     margin: 0;
-    color: #333;
+    color: #ffffff;
 }
 
-.stats-form input{
-    width: 100%;
-    padding: 14px;
-    border-radius: 12px;
-    border: 2px solid #E5E7EB;
-    font-size: 16px;
-    box-sizing: border-box;
-    transition: .2s;
+.stats-form input[type="number"] {
+  background-color: #faf2e5; 
+  border-color: #0077ff;   
 }
 
-.stats-form input:focus{
-    outline: none;
-    border-color: #58C78D;
-    box-shadow: 0 0 8px rgba(88,199,141,.25);
+.stats-form input,
+.stats-form select{
+    width:100%;
+    padding:14px;
+    color: #000;
+    border-radius:12px;
+    border:2px solid #E5E7EB;
+    font-size:16px;
+    box-sizing:border-box;
+    transition:.2s;
 }
+
+.stats-form input:focus,
+.stats-formselect:focus{
+    outline:none;
+    border-color:#58C78D;
+    box-shadow:0 0 8px rgba(88,199,141,.25);
+}
+
+
 
 .stats-form button{
     width: 100%;
     padding: 14px;
     border: none;
     border-radius: 12px;
-    background: #53C9A8;
+    background: #345212;
     color: white;
     font-size: 16px;
     font-weight: bold;
