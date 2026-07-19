@@ -16,7 +16,7 @@
 .pet-card h2{
     margin:12px 0 2px;
     font-size:2rem;
-    color:#333;
+    color:#ffffff;
 }
 
 .pet-card p{
@@ -26,7 +26,7 @@
 
 .pet-level{
     display:inline-block;
-    background:#4FD3D9;
+    background:#69480a;
     color:white;
     padding:6px 14px;
     border-radius:20px;
@@ -44,7 +44,7 @@
 
 .mood-fill{
     height:100%;
-    background:#58C78D;
+    background:#04236f;
     border-radius:20px;
     transition:width .4s ease;
 }
@@ -85,3 +85,4 @@
         transform:translateY(0px);
     }
 }
+

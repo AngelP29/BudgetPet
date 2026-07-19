@@ -1,5 +1,6 @@
 .chat-card{
-    background:rgba(255,255,255,.88); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    background: #fff;
+    background-color: transparent;
     border-radius:24px;
     padding:30px;
     box-shadow:0 15px 35px rgba(0,0,0,.12);
@@ -8,7 +9,7 @@
 .chat-card h2{
     margin-top:0;
     margin-bottom:8px;
-    color:#333;
+    color:#ffffff;
 }
 
 .chat-box{
@@ -29,18 +30,25 @@
     gap:12px;
 }
 
-/* keep your existing input styling, but move it to the form input */
-.chat-form input{
+.chat-card input[type="text"] {
+  background-color: #faf2e5; 
+  border-color: #0077ff;   
+}
+
+.chat-card input,
+.chat-card select{
     width:100%;
     padding:14px;
+    color: #000;
     border-radius:12px;
     border:2px solid #E5E7EB;
+    font-size:16px;
     box-sizing:border-box;
-    font-size:15px;
     transition:.2s;
 }
 
-.chat-form input:focus{
+.chat-card input:focus,
+.chat-card select:focus{
     outline:none;
     border-color:#58C78D;
     box-shadow:0 0 8px rgba(88,199,141,.25);
@@ -51,7 +59,7 @@
     padding:14px;
     border:none;
     border-radius:12px;
-    background:#53C9A8;
+    background:#345212;
     color:white;
     font-weight:bold;
     font-size:15px;
@@ -77,3 +85,8 @@
     font-size:14px;
     line-height:1.4;
 }
+
+
+
+
+
