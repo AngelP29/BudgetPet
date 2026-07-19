@@ -104,6 +104,12 @@ function Login() {
                 Don't have an account?
                 <Link to="/signup">Create one</Link>
             </p>
+
+            <p className="forgot-password-link">
+                Forgot your password?
+                <Link to="/sendEmail">Reset it</Link>
+            </p>
+
         </form>
     );
 };
