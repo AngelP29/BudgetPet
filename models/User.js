@@ -34,7 +34,11 @@ const UserSchema = new mongoose.Schema({
     },
     verificationToken: {
         type: String,
-        default: ''
+        default: null
+    },
+    verificationTokenExpires: {
+        type: Date,
+        default: null
     },
     monthlyBudget: {
         type: Number,

@@ -53,7 +53,7 @@
 
 .resend-btn{
 
-    background:#345612;
+    background:#345212;
 
     color:white;
 
@@ -75,8 +75,8 @@
 }
 
 .resend-btn:hover{
-    transform:translateY(-2px);
-    background:#416d17;
+    background: #47b67c;
+    transform: translateY(-2px);
 }
 
 .verified{
