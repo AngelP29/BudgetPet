@@ -61,6 +61,15 @@ class _PetDisplayState extends State<PetDisplay>
     final preferences = await SharedPreferences.getInstance();
     final userId = preferences.getString("userId");
 
+    final token = preferences.getString("token");
+    if (token == null || token.isEmpty) {
+      if (!mounted) return;
+      setState(() {
+        errorMessage = "Missing login token. Please log in again.";
+      });
+      return;
+    }
+
     if (userId == null || userId.isEmpty) {
       if (!mounted) {
         return;
@@ -80,8 +89,13 @@ class _PetDisplayState extends State<PetDisplay>
       });
 
       final response = await http.get(
-        Uri.parse("https://monetee.xyz/api/pets/$userId"),
+        Uri.parse("https://monetee.xyz/api/pets"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        }
       );
+      
 
       final dynamic decodedBody = jsonDecode(response.body);
 

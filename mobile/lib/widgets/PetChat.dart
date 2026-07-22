@@ -3,6 +3,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class PetChat extends StatefulWidget {
   const PetChat({super.key});
@@ -31,6 +33,15 @@ class _PetChatState extends State<PetChat> {
       });
       return;
     }
+    final preferences = await SharedPreferences.getInstance();
+    final token = preferences.getString("token");
+    if (token == null || token.isEmpty) {
+      if (!mounted) return;
+      setState(() {
+        errorMessage = "Missing login token. Please log in again.";
+      });
+      return;
+    }
 
     try {
       setState(() {
@@ -38,16 +49,17 @@ class _PetChatState extends State<PetChat> {
       });
 
       final response = await http.post(
-        Uri.parse("https://monetee.xyz/api/pets/chat"),
+        Uri.parse("https://monetee.xyz/api/chat"),
         headers: {
           "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
         },
         body: jsonEncode({
           "message": message,
           "petName": "BudgetPet",
         }),
       );
-
+      
       final dynamic decodedBody = jsonDecode(response.body);
       final Map<String, dynamic> data =
           decodedBody is Map<String, dynamic> ? decodedBody : {};

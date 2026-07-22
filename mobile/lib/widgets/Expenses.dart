@@ -57,6 +57,16 @@ class _ExpensesState extends State<Expenses> {
 
   Future<void> loadExpenses() async {
     final userId = await getUserId();
+    final token = await getToken();
+
+    if (token == null || token.isEmpty) {
+      if (!mounted) return;
+      setState(() {
+        errorMessage = "Missing login token. Please log in again.";
+     });
+     return;
+    }
+
 
     if (userId == null || userId.isEmpty) {
       if (!mounted) return;
@@ -74,9 +84,14 @@ class _ExpensesState extends State<Expenses> {
       });
 
       final response = await http.get(
-        Uri.parse("$baseUrl/api/expenses/$userId"),
+        Uri.parse("$baseUrl/api/expenses"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        }
       );
 
+      
       final dynamic decodedBody = jsonDecode(response.body);
 
       if (response.statusCode != 200) {

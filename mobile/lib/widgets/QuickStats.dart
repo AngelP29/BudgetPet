@@ -55,6 +55,19 @@ class _QuickStatsState extends State<QuickStats> {
   Future<void> getQuickStats() async {
     final userId = await getUserId();
 
+    final preferences = await SharedPreferences.getInstance();
+    final token = preferences.getString("token");
+
+    if (token == null || token.isEmpty) {
+      if (!mounted) return;
+
+      setState(() {
+        errorMessage = "Login token not found. Please log in again.";
+     });
+     return;
+    }
+
+
     if (userId == null || userId.isEmpty) {
       if (!mounted) {
         return;
@@ -76,8 +89,15 @@ class _QuickStatsState extends State<QuickStats> {
       }
 
       final response = await http.get(
-        Uri.parse("https://monetee.xyz/api/dashboard/$userId"),
+        Uri.parse("https://monetee.xyz/api/dashboard"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
       );
+
+      
+
 
       final dynamic decodedBody = jsonDecode(response.body);
 
@@ -193,16 +213,30 @@ class _QuickStatsState extends State<QuickStats> {
         isSavingGoals = true;
       });
 
+      final preferences = await SharedPreferences.getInstance();
+      final token = preferences.getString("token");
+
+      if (token == null || token.isEmpty) {
+        if (!mounted) return;
+        setState(() {
+          errorMessage = "Login token not found. Please log in again.";
+       });
+       return;
+      }
+
       final response = await http.put(
-        Uri.parse("https://monetee.xyz/api/dashboard/$userId"),
+        Uri.parse("https://monetee.xyz/api/dashboard"),
         headers: {
           "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
         },
+        
         body: jsonEncode({
           "monthlyBudget": monthlyBudget,
           "monthlySavingsGoal": monthlySavingsGoal,
         }),
       );
+      
 
       final dynamic decodedBody = jsonDecode(response.body);
 
