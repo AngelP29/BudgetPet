@@ -1,21 +1,27 @@
 import "./CheckEmail.css"
 import Logo from "../components/Logo";
 import Background from "../components/Background";
+import moneteeHappy from "../public/New Sign Up.png" 
 
 import { Link, useLocation } from "react-router-dom";
 
-function CheckEmail(){
+function CheckEmail() {
     const location = useLocation();
     const email = location.state?.email ?? " the email address you provided";
 
-    function handleResendEmail(){
+    function handleResendEmail() {
 
     }
 
-    return(
+    return (
         <div className="email-check">
 
-            <Logo />
+            <div className="logo-container">
+
+                <img src={moneteeHappy} alt="Monetee, the pet">
+                </img>
+
+            </div>
 
             <Background />
 
@@ -29,9 +35,7 @@ function CheckEmail(){
                     Your BudgetPet account has been created!
                     <br /><br />
                     We've sent a verification email to
-                    <br />
                     <strong>{email}</strong>
-                    <br /><br />
                     Please click the link in that email to activate your account.
                 </p>
 

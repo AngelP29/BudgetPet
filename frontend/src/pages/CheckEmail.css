@@ -10,27 +10,21 @@
 .email-card{
     width:90%;
     max-width:500px;
-
     padding:40px;
-
     border-radius:18px;
-
-    background:rgba(255,255,255,0.12);
-    backdrop-filter:blur(8px);
-
+    background-color: #fff;
     box-shadow:0 8px 25px rgba(0,0,0,0.25);
-
     text-align:center;
 }
 
 .message{
-    color:#fff;
+    color:#000000;
     margin-bottom:20px;
     font-size:2rem;
 }
 
 .sent-email{
-    color:#fff;
+    color:#000;
     line-height:1.7;
     margin-bottom:30px;
 }
@@ -41,13 +35,13 @@
 
     font-size:1.1rem;
 
-    color:#7fd8ff;
+    color:#345612;
 
     word-break:break-word;
 }
 
 .resend-text{
-    color:#fff;
+    color:#000;
     margin-bottom:10px;
 }
 
@@ -80,12 +74,12 @@
 }
 
 .verified{
-    color:white;
+    color: #000;
 }
 
 .verified a{
 
-    color:#7fd8ff;
+    color:#345612;
 
     text-decoration:none;
 
