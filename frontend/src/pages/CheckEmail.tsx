@@ -1,5 +1,5 @@
-import "./CheckEmail.css"
-import Logo from "../components/Logo";
+import "./CheckEmail.css";
+
 import Background from "../components/Background";
 import moneteeHappy from "../public/New Sign Up.png" 
 
