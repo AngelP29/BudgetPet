@@ -107,7 +107,7 @@ function Login() {
 
             <p className="forgot-password-link">
                 Forgot your password?
-                <Link to="/check-email">Reset it</Link>
+                <Link to="/sendEmail">Reset it</Link>
             </p>
 
         </form>
