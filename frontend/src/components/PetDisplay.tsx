@@ -3,19 +3,21 @@ import { useState } from "react";
 
 import "./PetDisplay.css"
 import petImg from "../public/Monetee.png"
+import sadState from "../public/Sad Monetee.gif"
+import happyState from "../public/Happy Monetee.gif"
+import worriedState from "../public/Worried Monetee.gif"
 
 type Pet = {
     level: number;
     exp: number;
     happiness: number;
-    health: number;
 };
 
 type PetDisplayProps = {
     refreshTrigger: number;
 };
 
-function PetDisplay({ refreshTrigger }: PetDisplayProps){
+function PetDisplay({ refreshTrigger }: PetDisplayProps) {
     const [pet, setPet] = useState<Pet | null>(null);
 
     const [errorMessage, setErrorMessage] = useState("");
@@ -25,7 +27,7 @@ function PetDisplay({ refreshTrigger }: PetDisplayProps){
         loadPet();
     }, [refreshTrigger]);
 
-    async function loadPet(){
+    async function loadPet() {
         const token = localStorage.getItem("token");
 
         if (!token) {
@@ -39,7 +41,7 @@ function PetDisplay({ refreshTrigger }: PetDisplayProps){
 
             const response = await fetch("/api/pets", {
                 headers: {
-                    Authorization: `Bearer ${ token }`
+                    Authorization: `Bearer ${token}`
                 }
             });
             const data = await response.json();
@@ -51,14 +53,34 @@ function PetDisplay({ refreshTrigger }: PetDisplayProps){
 
             setPet(data);
 
-        } catch(e) {
+        } catch (e) {
             setErrorMessage("Unable to retrieve pet information.");
         } finally {
             setIsFetchingPet(false);
         }
     }
 
-    return(
+    let currState = petImg;
+    
+    if (pet != null) {
+        
+            if (pet.happiness > 60) 
+            {
+                currState = happyState;
+            }
+
+            if (pet.happiness >= 40 && pet.happiness <= 60) 
+            {
+                currState = sadState;
+            }
+
+            if (pet.happiness < 40) 
+            {
+                currState = worriedState;
+            }
+    }
+
+    return (
 
         <div className="pet-card">
 
@@ -66,10 +88,10 @@ function PetDisplay({ refreshTrigger }: PetDisplayProps){
             {isFetchingPet && <p className="pet-loading-message">Loading pet...</p>}
 
             <div className="logo-container">
-                    
-                <img src={petImg} alt="Monetee, the virtual pet">
+
+                <img src={currState} alt="Monetee, the virtual pet with dynamic expressions">
                 </img>
-        
+
             </div>
 
             <h2>{"Monetee"}</h2>
