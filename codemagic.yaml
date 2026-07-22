@@ -1,0 +1,29 @@
+workflows:
+  ios-testflight:
+    name: BudgetPet iOS
+    instance_type: mac_mini_m2
+    max_build_duration: 120
+
+    working_directory: mobile
+
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+
+    scripts:
+      - name: Get Flutter packages
+        script: |
+          flutter pub get
+
+      - name: Analyze Flutter project
+        script: |
+          flutter analyze
+
+      - name: Build unsigned iOS app
+        script: |
+          flutter build ios --release --no-codesign
+
+    artifacts:
+      - build/ios/iphoneos/*.app
+      - flutter_drive.log
