@@ -1,0 +1,35 @@
+.verify-page{
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+}
+
+.verify-card{
+    width: 420px;
+    max-width: 90%;
+
+    padding: 40px;
+
+    border-radius: 18px;
+
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(12px);
+
+    text-align: center;
+
+    color: white;
+
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+}
+
+.verify-card h2{
+    margin-bottom:20px;
+}
+
+.verify-card p{
+    line-height:1.6;
+}

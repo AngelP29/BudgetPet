@@ -64,11 +64,18 @@ function SignUp() {
                 return;
             }
 
+            setSuccessMessage("Account created successfully! Redirecting...");
+
+            navigate("/check-email", {
+                state: {
+                    email
+                }
+            });
+
+            /*
             localStorage.setItem("token", data.token);
             localStorage.setItem("userId", data.userId);
             localStorage.setItem("username", data.username);
-
-            setSuccessMessage("Account created successfully! Redirecting...");
 
             localStorage.setItem("userId", data.userId);
             localStorage.setItem("token", data.token);
@@ -77,6 +84,7 @@ function SignUp() {
             setTimeout(() => {
                 navigate("/dashboard");
             }, 700);
+            */
 
         } catch (err) {
             setErrorMessage("Unable to connect to the server.");

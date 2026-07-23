@@ -6,6 +6,7 @@ const crypto = require("crypto");
 
 const User = require('../models/User');
 const Pet = require('../models/Pet');
+const { sendVerificationEmail } = require("../utils/email");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -73,10 +74,21 @@ router.post('/register', async (req, res) => {
         });
         await starterPet.save();
 
+        //all auth knows about emails
+        await sendVerificationEmail(
+            user.email,
+            verificationToken
+        );
+
         // Create secure token for automatic login
+        return res.status(201).json({
+            message: "Registration successful. Please verify your email."
+        });
+        /*
         const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '30d' });
 
         return res.status(201).json({ message: "Registration successful!", token, userId: user._id, username: user.username });
+        */
     } catch (err) {
         return res.status(500).json({ error: "Server error during registration: " + err.message });
     }
@@ -94,7 +106,18 @@ router.post('/login', async (req, res) => {
 
         // Check user existence
         const user = await User.findOne({ username });
-        if (!user) return res.status(400).json({ error: "Invalid credentials." });
+
+        if (!user){
+            return res.status(400).json({ 
+                error: "Invalid credentials."
+            });
+        }
+        
+        if(!user.isVerified){
+            return res.status(403).json({
+                error: "Please verify your email before logging in."
+            });
+        }
 
         // Validate password
         const isMatch = await bcrypt.compare(password, user.password);
@@ -106,6 +129,49 @@ router.post('/login', async (req, res) => {
         return res.json({ message: "Welcome back!", token, userId: user._id, username: user.username });
     } catch (err) {
         return res.status(500).json({ error: "Server error during login: " + err.message });
+    }
+});
+
+//verification route for signups
+router.get("/verify", async (req, res) => {
+    try{
+        const { token } = req.query;
+
+        if(!token){
+            return res.status(400).json({
+                error: "Missing verification token."
+            });
+        }
+
+        const user = await User.findOne({
+            verificationToken: token
+        });
+
+        if(!user){
+            return res.status(400).json({
+                error: "Invalid verification link."
+            });
+        }
+
+        if(user.verificationTokenExpires < new Date()){
+            return res.status(400).json({
+                error: "Verification link has expired."
+            });
+        }
+
+        user.isVerified = true;
+        user.verificationToken = "";
+        user.verificationTokenExpires = null;
+
+        await user.save();
+
+        return res.json({
+            message: "Email verified successfully."
+        });
+    } catch(err){
+        return res.status(500).json({
+            error: err.message
+        });
     }
 });
 

@@ -1,60 +1,55 @@
-//*****this page is still in progress and should not be linked to anything yet*****
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 
-//neither exists in .env yet
-const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 async function sendVerificationEmail(email, token) {
 
-    const verificationLink =
-        `linktobeadded=${token}`;
+    const verificationLink = `${process.env.FRONTEND_URL}/verify?token=${token}`;
 
-    await transporter.sendMail({
+    try {
 
-        from: `"BudgetPet" <${process.env.EMAIL_USER}>`,
+        await resend.emails.send({
 
-        to: email,
+            from: "BudgetPet <onboarding@resend.dev>",
 
-        subject: "Verify your BudgetPet Account",
+            to: email,
 
-        html: `
-            <h2>Welcome to BudgetPet!</h2>
+            subject: "Verify your BudgetPet Account",
 
-            <p>
-                Thank you for creating an account.
-            </p>
+            html: `
+                <h2>Welcome to BudgetPet!</h2>
 
-            <p>
-                Click the button below to verify your email.
-            </p>
+                <p>
+                    Thanks for creating your account.
+                </p>
 
-            <p>
-                <a
-                    href="${verificationLink}"
-                    style="
-                        background:#4CAF50;
-                        color:white;
-                        padding:12px 20px;
-                        text-decoration:none;
-                        border-radius:6px;
-                    "
-                >
-                    Verify Email
-                </a>
-            </p>
+                <p>
+                    Click the button below to verify your email.
+                </p>
 
-            <p>
-                If you did not create this account,
-                you can safely ignore this email.
-            </p>
-        `
-    });
+                <p>
+                    <a href="${verificationLink}">
+                        Verify Email
+                    </a>
+                </p>
+
+                <p>
+                    If you did not create this account,
+                    you can safely ignore this email.
+                </p>
+            `
+
+        });
+
+    }
+    catch(err){
+
+        console.error("Email Error:", err);
+
+        throw err;
+
+    }
+
 }
 
 module.exports = {
