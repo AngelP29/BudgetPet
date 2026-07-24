@@ -73,6 +73,13 @@
     transform: translateY(-2px);
 }
 
+.resend-message{
+    margin-top:15px;
+    color:#ffffff;
+    text-align:center;
+    font-size:0.95rem;
+}
+
 .verified{
     color: #000;
 }

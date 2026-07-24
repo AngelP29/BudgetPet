@@ -10,7 +10,7 @@ async function sendVerificationEmail(email, token) {
 
         await resend.emails.send({
 
-            from: "BudgetPet <onboarding@resend.dev>",
+            from: "BudgetPet <no-reply@monetee.xyz>",
 
             to: email,
 

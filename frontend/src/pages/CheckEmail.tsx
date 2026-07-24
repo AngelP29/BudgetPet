@@ -4,13 +4,43 @@ import Background from "../components/Background";
 import moneteeHappy from "../public/New Sign Up.png" 
 
 import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
 
 function CheckEmail() {
     const location = useLocation();
     const email = location.state?.email ?? " the email address you provided";
 
-    function handleResendEmail() {
+    const [message, setMessage] = useState("");
+    const [loading, setLoading] = useState(false);
 
+    async function handleResendEmail() {
+        setLoading(true);
+        setMessage("");
+
+        try{
+            const response = await fetch("/api/auth/resend-verification", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email
+                })
+            });
+
+            const data = await response.json();
+
+            if(!response.ok){
+                setMessage(data.error);
+                return;
+            }
+
+            setMessage("Verification email has been sent!");
+        } catch(e){
+            setMessage("Unable to contact the server.");
+        } finally{
+            setLoading(false);
+        }
     }
 
     return (
@@ -46,9 +76,18 @@ function CheckEmail() {
                 <button
                     className="resend-btn"
                     onClick={handleResendEmail}
+                    disabled={loading}
                 >
-                    Resend Verification Email
+                    {loading
+                        ? "Sending..."
+                        : "Resend Verification Email"}
                 </button>
+
+                {message && (
+                    <p className="resend-message">
+                        {message}
+                    </p>
+                )}
 
                 <p className="verified">
                     Already verified?

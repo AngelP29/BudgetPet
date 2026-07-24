@@ -84,13 +84,60 @@ router.post('/register', async (req, res) => {
         return res.status(201).json({
             message: "Registration successful. Please verify your email."
         });
-        /*
-        const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '30d' });
 
-        return res.status(201).json({ message: "Registration successful!", token, userId: user._id, username: user.username });
-        */
     } catch (err) {
         return res.status(500).json({ error: "Server error during registration: " + err.message });
+    }
+});
+
+//resend verification email route
+router.post("/resend-verification", async(req, res) => {
+    try{
+        const { email } = req.body;
+
+        if (!email) {
+            return res.status(400).json({
+                error: "Email is required."
+            });
+        }
+
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({
+                error: "User not found."
+            });
+        }
+
+        if (user.isVerified) {
+            return res.status(400).json({
+                error: "This account is already verified."
+            });
+        }
+
+        const verificationToken =
+            crypto.randomBytes(32).toString("hex");
+
+        const verificationTokenExpires =
+            new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+        user.verificationToken = verificationToken;
+        user.verificationTokenExpires = verificationTokenExpires;
+
+        await user.save();
+
+        await sendVerificationEmail(
+            user.email,
+            verificationToken
+        );
+
+        return res.json({
+            message: "Verification email sent."
+        });
+    } catch(err){
+        return res.status(500).json({
+            error: err.message
+        });
     }
 });
 
@@ -165,9 +212,9 @@ router.get("/verify", async (req, res) => {
 
         await user.save();
 
-        return res.json({
-            message: "Email verified successfully."
-        });
+        return res.redirect(
+            `${process.env.FRONTEND_URL}/verify`
+        );
     } catch(err){
         return res.status(500).json({
             error: err.message
