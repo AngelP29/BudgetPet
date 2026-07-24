@@ -1,6 +1,8 @@
 import "./Login.css";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import PopUp from "./Popup";
+
 
 function Login() {
     const navigate = useNavigate();
@@ -12,18 +14,18 @@ function Login() {
     const [successMessage, setSuccessMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
-    async function handleLogin(event: React.FormEvent<HTMLFormElement>){
+    async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
         setErrorMessage("");
         setSuccessMessage("");
 
-        if(!username.trim() || !password.trim()){
+        if (!username.trim() || !password.trim()) {
             setErrorMessage("Please enter both username and password.");
-            return; 
+            return;
         }
 
-        try{
+        try {
             setIsLoading(true);
 
             const response = await fetch("/api/auth/login", {
@@ -39,7 +41,7 @@ function Login() {
 
             const data = await response.json();
 
-            if(!response.ok){
+            if (!response.ok) {
                 setErrorMessage(data.error || "Login failed.");
                 return;
             }
@@ -58,59 +60,86 @@ function Login() {
                 navigate("/dashboard");
             }, 700);
 
-        } catch(err){
+        } catch (err) {
             console.error(err);
             setErrorMessage("Error: Unable to connect to the server.");
-        } finally{
+        } finally {
             setIsLoading(false);
         }
     }
 
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+    const closeModal = () => {
+        setIsModalVisible(false);
+    };
+
+
     return (
-        <form className="login-card" onSubmit={handleLogin}>
-            <h2>Welcome Back</h2>
 
-            <p className="login-subtitle">
-                Sign in to continue your journey.
-            </p>
+        <div>
+            <form className="login-card" onSubmit={handleLogin}>
+                <h2>Welcome Back</h2>
 
-            <input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-            />
+                <p className="login-subtitle">
+                    Sign in to continue your journey.
+                </p>
 
-            <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
+                <input
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
 
-            {errorMessage && (
-                <p className="form-message error-message">{errorMessage}</p>
-            )}
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
 
-            {successMessage && (
-                <p className="form-message success-message">{successMessage}</p>
-            )}
+                {errorMessage && (
+                    <p className="form-message error-message">{errorMessage}</p>
+                )}
 
-            <button type="submit" disabled={isLoading}>
-                {isLoading ? "Logging In..." : "Log In"}
-            </button>
+                {successMessage && (
+                    <p className="form-message success-message">{successMessage}</p>
+                )}
 
-            <p className="signup-link">
-                Don't have an account?
-                <Link to="/signup">Create one</Link>
-            </p>
+                <button type="submit" disabled={isLoading}>
+                    {isLoading ? "Logging In..." : "Log In"}
+                </button>
 
-            <p className="forgot-password-link">
-                Forgot your password?
-                <Link to="/sendEmail">Reset it</Link>
-            </p>
+                <p className="signup-link">
+                    Don't have an account?
+                    <Link to="/signup">
+                        Create one
+                    </Link>
+                </p>
 
-        </form>
+                <p className="forgot-password-modal">
+                    Forgot your password?
+                    <button type="button" onClick={showModal}>
+                        Reset it
+                    </button>
+
+                </p>
+
+            </form>
+
+            <div>
+                <div className="modal-pop-up">
+                    {isModalVisible && <PopUp onClose={closeModal}/>}
+                </div>
+            </div>
+
+        </div>
+
     );
 };
 

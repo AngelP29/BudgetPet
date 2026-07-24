@@ -122,7 +122,7 @@
 
 }
 
-.forgot-password-link{
+.forgot-password-modal{
 
     text-align:center;
 
@@ -132,18 +132,32 @@
 
 }
 
-.forgot-password-link a{
+.forgot-password-modal button{
 
-    text-decoration:none;
+    background: none;
 
-    color:#345612;
+    border: none;
 
-    font-weight:bold;
+    padding:0px;
 
     margin-left:6px;
 
+    font: inherit;
+
+    font-weight:bold;
+    
+    text-decoration: none;
+
+    cursor: pointer;
+
+    color:#345612;
 }
 
+.forgot-password-modal button:hover{
+
+    background:#ffffff;
+    
+}
 
 
 .form-message{
