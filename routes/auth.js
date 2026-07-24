@@ -7,6 +7,7 @@ const crypto = require("crypto");
 const User = require('../models/User');
 const Pet = require('../models/Pet');
 const { sendVerificationEmail } = require("../utils/email");
+const { sendResetPasswordRequest } = require("../utils/resetPassword");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -22,8 +23,8 @@ router.post('/register', async (req, res) => {
         const { firstName, lastName, username, email, password } = req.body;
 
         //basic validation
-        if(!firstName || !lastName || !username || !email || !password){
-            return res.status(400).json({error: "All fields are required."});
+        if (!firstName || !lastName || !username || !email || !password) {
+            return res.status(400).json({ error: "All fields are required." });
         }
 
         //password strength checker
@@ -55,11 +56,11 @@ router.post('/register', async (req, res) => {
         );
 
         // Save new user
-        const user = new User({ 
-            firstName, 
-            lastName, 
-            username, 
-            email, 
+        const user = new User({
+            firstName,
+            lastName,
+            username,
+            email,
             password: hashedPassword,
             isVerified: false,
             verificationToken,
@@ -91,8 +92,8 @@ router.post('/register', async (req, res) => {
 });
 
 //resend verification email route
-router.post("/resend-verification", async(req, res) => {
-    try{
+router.post("/resend-verification", async (req, res) => {
+    try {
         const { email } = req.body;
 
         if (!email) {
@@ -134,7 +135,7 @@ router.post("/resend-verification", async(req, res) => {
         return res.json({
             message: "Verification email sent."
         });
-    } catch(err){
+    } catch (err) {
         return res.status(500).json({
             error: err.message
         });
@@ -154,13 +155,13 @@ router.post('/login', async (req, res) => {
         // Check user existence
         const user = await User.findOne({ username });
 
-        if (!user){
-            return res.status(400).json({ 
+        if (!user) {
+            return res.status(400).json({
                 error: "Invalid credentials."
             });
         }
-        
-        if(!user.isVerified){
+
+        if (!user.isVerified) {
             return res.status(403).json({
                 error: "Please verify your email before logging in."
             });
@@ -181,10 +182,10 @@ router.post('/login', async (req, res) => {
 
 //verification route for signups
 router.get("/verify", async (req, res) => {
-    try{
+    try {
         const { token } = req.query;
 
-        if(!token){
+        if (!token) {
             return res.status(400).json({
                 error: "Missing verification token."
             });
@@ -194,13 +195,13 @@ router.get("/verify", async (req, res) => {
             verificationToken: token
         });
 
-        if(!user){
+        if (!user) {
             return res.status(400).json({
                 error: "Invalid verification link."
             });
         }
 
-        if(user.verificationTokenExpires < new Date()){
+        if (user.verificationTokenExpires < new Date()) {
             return res.status(400).json({
                 error: "Verification link has expired."
             });
@@ -215,11 +216,106 @@ router.get("/verify", async (req, res) => {
         return res.redirect(
             `${process.env.FRONTEND_URL}/verify`
         );
-    } catch(err){
+    } catch (err) {
         return res.status(500).json({
             error: err.message
         });
     }
+});
+
+// Request from pop-up
+router.post('/requestReset', async (req, res) => {
+    const { email } = req.body;
+    try {
+        if (!email) {
+            return res.status(400).json({
+                error: "Email is required."
+            });
+        }
+
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({
+                error: "User not found."
+            });
+        }
+
+        // If user exists create and send token via utils email function
+
+        const verificationToken =
+            crypto.randomBytes(32).toString("hex");
+
+        const verificationTokenExpires =
+            new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+        user.verificationToken = verificationToken;
+        user.verificationTokenExpires = verificationTokenExpires;
+
+        await user.save();
+
+        await sendResetPasswordRequest(
+            user.email,
+            verificationToken
+        );
+
+        return res.json({
+            message: "Password reset email sent."
+        });
+    }
+    catch (err) {
+        return res.status(500).json({
+            error: err.message
+        });
+    }
+});
+// Request post-email update password
+router.post('/updatePass', async (req, res) => {
+
+    const { token, password } = req.body;
+
+    try {
+
+        if (!token) {
+            return res.status(400).json({
+                error: "Missing token."
+            });
+        }
+
+        const user = await User.findOne({
+            verificationToken: token
+        });
+
+        if (!user) {
+            return res.status(400).json({
+                error: "Invalid reset password token."
+            });
+        }
+
+        if (user.verificationTokenExpires < new Date()) {
+            return res.status(400).json({
+                error: "Request token has expired."
+            });
+        }
+
+        // Hash the password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        user.password = hashedPassword;
+
+        await user.save;
+
+        return res.json({
+            message: "Password reset successfuly."
+        });
+    }
+    catch (err) {
+        return res.status(500).json({
+            error: err.message
+        });
+    }
+
 });
 
 module.exports = router;

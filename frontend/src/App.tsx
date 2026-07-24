@@ -5,6 +5,7 @@ import SignUp from "./pages/SignupPage"
 import Dashboard from "./pages/Dashboard";
 import CheckEmail from "./pages/CheckEmail";
 import Verify from "./pages/Verify";
+import ResetPass from "./pages/ResetPassword";
 
 function App() {
   return(
@@ -15,6 +16,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/check-email" element={<CheckEmail />} />
         <Route path="/verify" element={<Verify />} />
+        <Route path="/reset-password" element={<ResetPass />} />
       </Routes>
     </BrowserRouter>
   )

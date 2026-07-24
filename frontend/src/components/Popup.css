@@ -83,6 +83,8 @@
 .get-email input{
     padding:15px;
 
+    margin-bottom: 30px;
+
     width: 300px;
 
     border-radius:14px;
@@ -130,4 +132,12 @@
     line-height:2;
 
     margin-bottom:30px;
+}
+
+.error-message{
+    color:#ff0000;
+}
+
+.success-message{
+    color:#345612;
 }
