@@ -8,14 +8,17 @@ interface Props {
 
 function Popup({ onClose }: Props) {
 
-  const [isShowing, setShouldShow] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
 
   async function resetPassword(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-  
+    setErrorMessage("");
+    setIsLoading(true);
+
     if (!email.trim()) {
       setErrorMessage("Please fill in your account email.");
       return;
@@ -33,14 +36,13 @@ function Popup({ onClose }: Props) {
       });
 
       await response.json();
-
-      setShouldShow(true);
+      setIsSubmitted(true);
 
     } catch (err) {
       console.error(err);
       setErrorMessage("Error: Unable to connect to the server.");
     } finally {
-      setShouldShow(false);
+      setIsLoading(false);
     }
   }
 
@@ -48,7 +50,7 @@ function Popup({ onClose }: Props) {
 
     <div className="global-modal-card">
 
-      {isShowing ?
+      {isSubmitted ?
         (
           <div className="modal-card">
 
@@ -114,8 +116,8 @@ function Popup({ onClose }: Props) {
                 <p className="form-message error-message">{errorMessage}</p>
               )}
 
-              <button type="submit" disabled={isShowing}>
-                {isShowing ? "Loading" : "Reset Password"}
+              <button type="submit" disabled={isLoading}>
+                {isLoading ? "Loading" : "Reset Password"}
               </button>
 
             </form >
