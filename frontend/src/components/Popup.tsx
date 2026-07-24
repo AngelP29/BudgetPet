@@ -11,20 +11,15 @@ function Popup({ onClose }: Props) {
   const [isShowing, setShouldShow] = useState(false);
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
 
 
   async function resetPassword(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setErrorMessage("");
-    setSuccessMessage("");
-
+  
     if (!email.trim()) {
       setErrorMessage("Please fill in your account email.");
       return;
     }
-
-    setShouldShow(true);
 
     try {
       const response = await fetch("/api/auth/requestReset", {
@@ -37,14 +32,9 @@ function Popup({ onClose }: Props) {
         })
       });
 
-      const data = await response.json();
+      await response.json();
 
-      if (!response.ok) {
-        setErrorMessage(data.error);
-        return;
-      }
-
-      setSuccessMessage(data.data);
+      setShouldShow(true);
 
     } catch (err) {
       console.error(err);
@@ -122,10 +112,6 @@ function Popup({ onClose }: Props) {
 
               {errorMessage && (
                 <p className="form-message error-message">{errorMessage}</p>
-              )}
-
-              {successMessage && (
-                <p className="form-message success-message">{successMessage}</p>
               )}
 
               <button type="submit" disabled={isShowing}>
