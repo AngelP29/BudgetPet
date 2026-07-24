@@ -44,6 +44,8 @@ function Popup({ onClose }: Props) {
         return;
       }
 
+      setSuccessMessage(data.data);
+
     } catch (err) {
       console.error(err);
       setErrorMessage("Error: Unable to connect to the server.");

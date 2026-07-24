@@ -7,7 +7,7 @@ const crypto = require("crypto");
 const User = require('../models/User');
 const Pet = require('../models/Pet');
 const { sendVerificationEmail } = require("../utils/email");
-const { sendResetPasswordRequest } = require("../utils/resetPassword");
+const { resetPasswordRequest } = require("../utils/resetPassword");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -235,32 +235,28 @@ router.post('/requestReset', async (req, res) => {
 
         const user = await User.findOne({ email });
 
-        if (!user) {
-            return res.status(404).json({
-                error: "User not found."
-            });
+        if (user) {
+
+            const verificationToken =
+                crypto.randomBytes(32).toString("hex");
+
+            const verificationTokenExpires =
+                new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+            user.verificationToken = verificationToken;
+            user.verificationTokenExpires = verificationTokenExpires;
+
+            await user.save();
+
+            await resetPasswordRequest(
+                user.email,
+                verificationToken
+            );
         }
 
-        // If user exists create and send token via utils email function
-
-        const verificationToken =
-            crypto.randomBytes(32).toString("hex");
-
-        const verificationTokenExpires =
-            new Date(Date.now() + 24 * 60 * 60 * 1000);
-
-        user.verificationToken = verificationToken;
-        user.verificationTokenExpires = verificationTokenExpires;
-
-        await user.save();
-
-        await sendResetPasswordRequest(
-            user.email,
-            verificationToken
-        );
-
-        return res.json({
-            message: "Password reset email sent."
+        return res.status(200).json({
+            status: "success",
+            message: "Password email sent"
         });
     }
     catch (err) {
