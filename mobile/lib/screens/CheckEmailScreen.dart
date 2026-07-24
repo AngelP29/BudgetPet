@@ -18,10 +18,32 @@ class CheckEmailScreen extends StatefulWidget {
   State<CheckEmailScreen> createState() => _CheckEmailScreenState();
 }
 
-class _CheckEmailScreenState extends State<CheckEmailScreen> {
+class _CheckEmailScreenState extends State<CheckEmailScreen>
+    with SingleTickerProviderStateMixin {
+
+  late final AnimationController _floatController;
+  late final Animation<double> _floatAnimation;
   String message = "";
   bool isLoading = false;
   bool isError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _floatController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
+    _floatAnimation = Tween<double>(
+      begin: -5,
+      end: 5,
+    ).animate(
+      CurvedAnimation(
+        parent: _floatController,
+        curve: Curves.easeInOut,
+      ),
+    );
+  }
 
   Future<void> handleResendEmail() async {
     setState(() {
@@ -99,6 +121,13 @@ class _CheckEmailScreenState extends State<CheckEmailScreen> {
   }
 
   @override
+  void dispose() {
+    _floatController.dispose();
+    super.dispose();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
@@ -129,19 +158,31 @@ class _CheckEmailScreenState extends State<CheckEmailScreen> {
                 ),
                 child: Column(
                   children: [
-                    Image.asset(
-                      "assets/images/New Sign Up.png",
-                      width: 230,
-                      height: 230,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Image.asset(
-                          "assets/images/MoneteeLogo.png",
-                          width: 220,
-                          height: 220,
-                          fit: BoxFit.contain,
-                        );
-                      },
+                    AnimatedBuilder(
+                        animation: _floatAnimation,
+                        builder: (context, child) {
+                            return Transform.translate(
+                                offset: Offset(0, _floatAnimation.value),
+                                child: Transform.rotate(
+                                    angle: _floatAnimation.value * 0.003,
+                                    child: child,
+                                ),
+                            );
+                        },
+                        child: Image.asset(
+                            "assets/images/New Sign Up.png",
+                            width: 230,
+                            height: 230,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
+                                return Image.asset(
+                                    "assets/images/MoneteeLogo.png",
+                                    width: 220,
+                                    height: 220,
+                                    fit: BoxFit.contain,
+                                );
+                            },
+                        ),
                     ),
                     const SizedBox(height: 20),
                     Container(

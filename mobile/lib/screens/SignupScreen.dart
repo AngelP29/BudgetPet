@@ -268,7 +268,7 @@ class _SignupScreenState extends State<SignupScreen>
                       style: TextStyle(
                         fontSize: 38,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: Colors.white,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -278,7 +278,7 @@ class _SignupScreenState extends State<SignupScreen>
                         "Build better financial habits alongside your virtual companion Monetee!",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Colors.black,
+                          color: Colors.white,
                           fontSize: 16,
                           height: 1.4,
                         ),

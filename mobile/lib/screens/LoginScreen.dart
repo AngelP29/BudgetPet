@@ -78,6 +78,9 @@ class _LoginScreenState extends State<LoginScreen>
       );
 
       final data = jsonDecode(response.body);
+
+      debugPrint("Status: ${response.statusCode}");
+      debugPrint("Login response: ${response.body}");
       
 
 
@@ -228,7 +231,7 @@ Widget build(BuildContext context) {
                     style: TextStyle(
                       fontSize: 38,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                   ),
 
@@ -240,7 +243,7 @@ Widget build(BuildContext context) {
                       "Build better financial habits alongside your virtual companion Monetee!",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Colors.white,
                         fontSize: 16,
                         height: 1.4,
                       ),
@@ -281,7 +284,7 @@ Widget build(BuildContext context) {
                           "Sign in to continue your journey.",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Color(0xFF777777),
+                            color: Color(0xFF1A1A1A),
                           ),
                         ),
 
@@ -374,7 +377,7 @@ Widget build(BuildContext context) {
                                 );
                               },
                               style: TextButton.styleFrom(
-                                foregroundColor: const Color(0xFF4A7DF3),
+                                foregroundColor: const Color(0xFF345612),
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 4,
                                   vertical: 2,
@@ -393,6 +396,55 @@ Widget build(BuildContext context) {
                             ),
                           ],
                         ),
+
+                        const SizedBox(height: 18),
+
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            const Text(
+                              "Forgot your password? ",
+                              style: TextStyle(
+                                color: Color(0xFF333333),
+                                fontSize: 15,
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                // TODO: Implement Forgot Password
+                              },        
+                              style: TextButton.styleFrom(
+                                foregroundColor: const Color(0xFF345612),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                  vertical: 2,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: const Text(
+                                "Reset it",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+
+
+
+
+
+
+
+
+
+
                       ],
                     ),
                   ),

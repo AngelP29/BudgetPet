@@ -98,6 +98,7 @@ class _PetDisplayState extends State<PetDisplay>
       
 
       final dynamic decodedBody = jsonDecode(response.body);
+      
 
       final Map<String, dynamic> data =
           decodedBody is Map<String, dynamic>
