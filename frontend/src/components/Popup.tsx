@@ -17,12 +17,13 @@ function Popup({ onClose }: Props) {
   async function resetPassword(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setErrorMessage("");
-    setIsLoading(true);
-
+    
     if (!email.trim()) {
       setErrorMessage("Please fill in your account email.");
       return;
     }
+
+    setIsLoading(true);
 
     try {
       const response = await fetch("/api/auth/requestReset", {
