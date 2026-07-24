@@ -3,11 +3,9 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
-import 'DashboardScreen.dart';
+import 'CheckEmailScreen.dart';
 import 'LoginScreen.dart';
-
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -20,6 +18,7 @@ class _SignupScreenState extends State<SignupScreen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _floatController;
   late final Animation<double> _floatAnimation;
+
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final usernameController = TextEditingController();
@@ -98,10 +97,11 @@ class _SignupScreenState extends State<SignupScreen>
       final Map<String, dynamic> data =
           decodedBody is Map<String, dynamic> ? decodedBody : {};
 
+      debugPrint("Signup status: ${response.statusCode}");
+      debugPrint("Signup response: ${response.body}");
+
       if (response.statusCode != 201) {
-        if (!mounted) {
-          return;
-        }
+        if (!mounted) return;
 
         setState(() {
           errorMessage = data["error"]?.toString() ?? "Signup failed.";
@@ -109,55 +109,31 @@ class _SignupScreenState extends State<SignupScreen>
         return;
       }
 
-      final preferences = await SharedPreferences.getInstance();
-
-      await preferences.setString(
-        "token",
-        data["token"]?.toString() ?? "",
-      );
-
-      await preferences.setString(
-        "userId",
-        data["userId"]?.toString() ?? "",
-      );
-
-      await preferences.setString(
-        "username",
-        data["username"]?.toString() ?? username,
-      );
-
-      if (!mounted) {
-        return;
-      }
+      if (!mounted) return;
 
       setState(() {
-        successMessage = "Account created successfully! Redirecting...";
+        successMessage = data["message"]?.toString() ??
+            "Registration successful. Please verify your email.";
       });
 
       await Future.delayed(const Duration(milliseconds: 700));
 
-      if (!mounted) {
-        return;
-      }
+      if (!mounted) return;
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => const DashboardScreen(),
+          builder: (_) => CheckEmailScreen(email: email),
         ),
       );
     } on FormatException {
-      if (!mounted) {
-        return;
-      }
+      if (!mounted) return;
 
       setState(() {
         errorMessage = "The server returned an invalid response.";
       });
     } catch (error) {
-      if (!mounted) {
-        return;
-      }
+      if (!mounted) return;
 
       setState(() {
         errorMessage = "Unable to connect to the server.";
@@ -208,19 +184,19 @@ class _SignupScreenState extends State<SignupScreen>
   void initState() {
     super.initState();
 
-     _floatController = AnimationController(
-        vsync: this,
-        duration: const Duration(seconds: 2),
+    _floatController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
 
-     _floatAnimation = Tween<double>(
-        begin: -5,
-        end: 5,
+    _floatAnimation = Tween<double>(
+      begin: -5,
+      end: 5,
     ).animate(
-       CurvedAnimation(
-         parent: _floatController,
-         curve: Curves.easeInOut,
-        ),
+      CurvedAnimation(
+        parent: _floatController,
+        curve: Curves.easeInOut,
+      ),
     );
   }
 
@@ -268,15 +244,14 @@ class _SignupScreenState extends State<SignupScreen>
                 child: Column(
                   children: [
                     AnimatedBuilder(
-                       animation: _floatAnimation,
-                       builder: (context, child) {
-                         return Transform.translate(
-                            offset: Offset(0, _floatAnimation.value),
-                            child: Transform.rotate(
-                              angle: _floatAnimation.value * 0.003,
-                              child: child,
-                            ),
-
+                      animation: _floatAnimation,
+                      builder: (context, child) {
+                        return Transform.translate(
+                          offset: Offset(0, _floatAnimation.value),
+                          child: Transform.rotate(
+                            angle: _floatAnimation.value * 0.003,
+                            child: child,
+                          ),
                         );
                       },
                       child: Image.asset(
@@ -464,13 +439,10 @@ class _SignupScreenState extends State<SignupScreen>
                                         );
                                       },
                                 style: TextButton.styleFrom(
-                                  foregroundColor: const Color(0xFF4A7DF3),
+                                  foregroundColor: const Color(0xFF345612),
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 4,
                                     vertical: 2,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
                                 child: const Text(
