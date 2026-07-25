@@ -79,8 +79,7 @@ class _LoginScreenState extends State<LoginScreen>
 
       final data = jsonDecode(response.body);
 
-      debugPrint("Status: ${response.statusCode}");
-      debugPrint("Login response: ${response.body}");
+      
       
 
 
