@@ -40,7 +40,7 @@ function Verify() {
                 const data = await response.json();
 
                 if (!response.ok) {
-                    setMessage(data.error || "Couldn't send password update request");
+                    setMessage(data.error || "Couldn't verify email");
                     return;
                 }
 
@@ -51,7 +51,7 @@ function Verify() {
                 }, 2500);
 
 
-            } catch (err) {
+            } catch {
                 setMessage("Unable to verify your email.");
             }
         }
