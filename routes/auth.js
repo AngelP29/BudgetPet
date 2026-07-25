@@ -191,6 +191,9 @@ router.get("/verify", async (req, res) => {
             });
         }
 
+        //test
+        console.log("VERIFY TOKEN:", token);
+
         const user = await User.findOne({
             verificationToken: token
         });
@@ -200,6 +203,9 @@ router.get("/verify", async (req, res) => {
                 error: "Invalid verification link."
             });
         }
+
+        //test
+        console.log(user);
 
         if (user.verificationTokenExpires < new Date()) {
             return res.status(400).json({
@@ -212,6 +218,9 @@ router.get("/verify", async (req, res) => {
         user.verificationTokenExpires = null;
 
         await user.save();
+
+        //test
+        console.log("Verified:", user.email);
 
         return res.redirect(
             `${process.env.FRONTEND_URL}/verify`
