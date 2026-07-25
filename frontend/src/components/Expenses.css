@@ -99,12 +99,13 @@
 
 .expense-list{
     list-style:none;
-    padding:0;
-    margin:0;
+    padding:1em;
+    margin:20px;
 }
 
 .expense-item{
-    padding:16px 0;
+    padding:1em;
+    margin:20px;
     background-color: #faf2e5;
     border-bottom:1px solid #EEE;
 }
