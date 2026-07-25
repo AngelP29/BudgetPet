@@ -1,7 +1,7 @@
 console.log("verifyEmail called");
 
 import "./Verify.css";
-import Logo from "../components/Logo";
+import Logo from "../public/MoneteeLogo.png";
 import Background from "../components/Background";
 
 import { useEffect, useState } from "react";
@@ -60,18 +60,29 @@ function Verify() {
     return (
         <div className="verify-page">
 
-        <Logo />
-        <Background />
+            <Background />
 
-        <div className="verify-card">
+            <div className="logo-container">
 
-            <h2>Email Verification</h2>
+                <img src={Logo} alt="Manatee Website Logo">
+                </img>
 
-            <p>{message}</p>
+                <div className="verify-card">
+
+                    <h2>Email Verification</h2>
+
+                    <p>
+                        <strong>
+                            {message}
+                        </strong>
+
+                    </p>
+
+                </div>
+
+            </div>
 
         </div>
-
-    </div>
     );
 
 }
