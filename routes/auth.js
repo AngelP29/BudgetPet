@@ -185,18 +185,20 @@ router.get("/verify", async (req, res) => {
     try {
         const { token } = req.query;
 
+        console.log("========== VERIFY ==========");
+        console.log("Token from URL:", token);
+
         if (!token) {
             return res.status(400).json({
                 error: "Missing verification token."
             });
         }
 
-        //test
-        console.log("VERIFY TOKEN:", token);
-
         const user = await User.findOne({
             verificationToken: token
         });
+
+        console.log("User found:", user);
 
         if (!user) {
             return res.status(400).json({
@@ -204,8 +206,7 @@ router.get("/verify", async (req, res) => {
             });
         }
 
-        //test
-        console.log(user);
+        console.log("Stored token:", user.verificationToken);
 
         if (user.verificationTokenExpires < new Date()) {
             return res.status(400).json({
@@ -219,13 +220,13 @@ router.get("/verify", async (req, res) => {
 
         await user.save();
 
-        //test
-        console.log("Verified:", user.email);
+        console.log("Successfully verified:", user.email);
 
         return res.redirect(
             `${process.env.FRONTEND_URL}/verify`
         );
     } catch (err) {
+        console.error(err);
         return res.status(500).json({
             error: err.message
         });
