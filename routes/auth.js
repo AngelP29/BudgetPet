@@ -222,9 +222,9 @@ router.post("/verify", async (req, res) => {
 
         console.log("Successfully verified:", user.email);
 
-        return res.redirect(
-            `${process.env.FRONTEND_URL}/`
-        );
+        return res.status(200).json({
+            message: "Email verified successfully."
+        });
     } catch (err) {
         console.error(err);
         return res.status(500).json({
@@ -310,7 +310,7 @@ router.post('/updatePass', async (req, res) => {
 
         user.password = hashedPassword;
 
-        await user.save;
+        await user.save();
 
         return res.json({
             message: "Password reset successfuly."
