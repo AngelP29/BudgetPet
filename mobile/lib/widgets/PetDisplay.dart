@@ -37,7 +37,7 @@ class _PetDisplayState extends State<PetDisplay>
 
     _floatAnimation = Tween<double>(
       begin: 0,
-      end: -12,
+      end: -8,
     ).animate(
       CurvedAnimation(
         parent: _floatController,
@@ -59,88 +59,75 @@ class _PetDisplayState extends State<PetDisplay>
 
   Future<void> loadPet() async {
     final preferences = await SharedPreferences.getInstance();
-    final userId = preferences.getString("userId");
-
     final token = preferences.getString("token");
-    if (token == null || token.isEmpty) {
-      if (!mounted) return;
-      setState(() {
-        errorMessage = "Missing login token. Please log in again.";
-      });
-      return;
-    }
 
-    if (userId == null || userId.isEmpty) {
+    if (token == null || token.isEmpty) {
       if (!mounted) {
         return;
       }
 
       setState(() {
-        errorMessage = "No logged-in user found.";
+        errorMessage = "Please log in.";
       });
 
       return;
     }
 
     try {
-      setState(() {
-        isFetchingPet = true;
-        errorMessage = "";
-      });
+      if (mounted) {
+        setState(() {
+          isFetchingPet = true;
+          errorMessage = "";
+        });
+      }
 
       final response = await http.get(
-        Uri.parse("https://monetee.xyz/api/pets"),
+        Uri.parse(
+          "https://monetee.xyz/api/pets",
+        ),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token",
-        }
+        },
       );
-      
 
-      final dynamic decodedBody = jsonDecode(response.body);
-      
+      Map<String, dynamic> data = {};
 
-      final Map<String, dynamic> data =
-          decodedBody is Map<String, dynamic>
-              ? decodedBody
-              : <String, dynamic>{};
+      try {
+        final decodedBody = jsonDecode(response.body);
 
-      if (response.statusCode != 200) {
-        if (!mounted) {
-          return;
+        if (decodedBody is Map<String, dynamic>) {
+          data = decodedBody;
         }
+      } catch (_) {
+        data = {};
+      }
 
+      if (!mounted) {
+        return;
+      }
+
+      if (response.statusCode >= 200 &&
+          response.statusCode < 300) {
+        setState(() {
+          pet = data;
+        });
+      } else {
         setState(() {
           errorMessage =
               data["error"]?.toString() ??
+              data["message"]?.toString() ??
               "Failed to load pet information.";
         });
-
-        return;
       }
-
-      if (!mounted) {
-        return;
-      }
-
-      setState(() {
-        pet = data;
-      });
-    } on FormatException {
-      if (!mounted) {
-        return;
-      }
-
-      setState(() {
-        errorMessage = "The server returned an invalid response.";
-      });
     } catch (error) {
       if (!mounted) {
         return;
       }
 
       setState(() {
-        errorMessage = "Unable to retrieve pet information.";
+        errorMessage =
+            "Unable to retrieve pet information.";
       });
     } finally {
       if (mounted) {
@@ -154,34 +141,58 @@ class _PetDisplayState extends State<PetDisplay>
   int get petLevel {
     final value = pet?["level"];
 
-    if (value is int) {
-      return value;
+    if (value is num) {
+      return value.toInt();
     }
 
-    return int.tryParse(value?.toString() ?? "") ?? 1;
+    return int.tryParse(
+          value?.toString() ?? "",
+        ) ??
+        1;
   }
 
   int get petExp {
     final value = pet?["exp"];
 
-    if (value is int) {
-      return value;
+    if (value is num) {
+      return value.toInt();
     }
 
-    return int.tryParse(value?.toString() ?? "") ?? 0;
+    return int.tryParse(
+          value?.toString() ?? "",
+        ) ??
+        0;
   }
 
   double get petHappiness {
     final value = pet?["happiness"];
 
     if (value is num) {
-      return value.toDouble().clamp(0, 100);
+      return value.toDouble().clamp(0.0, 100.0);
     }
 
     return double.tryParse(
           value?.toString() ?? "",
-        )?.clamp(0, 100) ??
-        100;
+        )?.clamp(0.0, 100.0) ??
+        100.0;
+  }
+
+  String get petImage {
+    final happiness = petHappiness;
+
+    if (pet == null) {
+      return "assets/images/Monetee.png";
+    }
+
+    if (happiness > 60) {
+      return "assets/images/Happy Monetee.gif";
+    }
+
+    if (happiness >= 40) {
+      return "assets/images/Sad Monetee.gif";
+    }
+
+    return "assets/images/Worried Monetee.gif";
   }
 
   @override
@@ -196,6 +207,9 @@ class _PetDisplayState extends State<PetDisplay>
 
     return Container(
       width: double.infinity,
+      margin: const EdgeInsets.only(
+        bottom: 30,
+      ),
       padding: const EdgeInsets.symmetric(
         horizontal: 28,
         vertical: 22,
@@ -205,13 +219,15 @@ class _PetDisplayState extends State<PetDisplay>
         borderRadius: BorderRadius.circular(25),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF1A5A78).withOpacity(0.18),
+            color:
+                const Color(0xFF1A5A78).withOpacity(0.18),
             blurRadius: 30,
             offset: const Offset(0, 10),
           ),
         ],
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           if (errorMessage.isNotEmpty) ...[
             Text(
@@ -228,6 +244,7 @@ class _PetDisplayState extends State<PetDisplay>
           if (isFetchingPet) ...[
             const Text(
               "Loading pet...",
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color(0xFF666666),
                 fontSize: 14,
@@ -238,18 +255,34 @@ class _PetDisplayState extends State<PetDisplay>
 
           AnimatedBuilder(
             animation: _floatAnimation,
-            builder: (context, child) {
-              return Transform.translate(
-                offset: Offset(0, _floatAnimation.value),
-                child: child,
-              );
-            },
             child: Image.asset(
-              "assets/images/Monetee.png",
+              petImage,
               width: 250,
               height: 250,
               fit: BoxFit.contain,
+              gaplessPlayback: true,
+              errorBuilder: (
+                context,
+                error,
+                stackTrace,
+              ) {
+                return Image.asset(
+                  "assets/images/Monetee.png",
+                  width: 250,
+                  height: 250,
+                  fit: BoxFit.contain,
+                );
+              },
             ),
+            builder: (context, child) {
+              return Transform.translate(
+                offset: Offset(
+                  0,
+                  _floatAnimation.value,
+                ),
+                child: child,
+              );
+            },
           ),
 
           const SizedBox(height: 10),
@@ -258,7 +291,7 @@ class _PetDisplayState extends State<PetDisplay>
             "Monetee",
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Color(0xFF333333),
+              color: Colors.white,
               fontSize: 32,
               fontWeight: FontWeight.bold,
             ),
@@ -272,7 +305,7 @@ class _PetDisplayState extends State<PetDisplay>
               vertical: 6,
             ),
             decoration: BoxDecoration(
-              color: const Color(0xFF4FD3D9),
+              color: const Color(0xFF69480A),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
@@ -309,9 +342,11 @@ class _PetDisplayState extends State<PetDisplay>
             child: LinearProgressIndicator(
               value: happiness / 100,
               minHeight: 20,
-              backgroundColor: const Color(0xFFE6E6E6),
-              valueColor: const AlwaysStoppedAnimation<Color>(
-                Color(0xFF58C78D),
+              backgroundColor:
+                  const Color(0xFFE6E6E6),
+              valueColor:
+                  const AlwaysStoppedAnimation<Color>(
+                Color(0xFF04236F),
               ),
             ),
           ),

@@ -66,6 +66,9 @@ flutter:
     - assets/images/BGMain.png
     - assets/images/Monetee.png
     - assets/images/New Sign Up.png
+    - assets/images/Happy Monetee.gif
+    - assets/images/Sad Monetee.gif
+    - assets/images/Worried Monetee.gif
 
 
   # To add assets to your application, add an assets section, like this:
