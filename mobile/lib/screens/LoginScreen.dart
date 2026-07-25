@@ -171,6 +171,8 @@ class _LoginScreenState extends State<LoginScreen>
   );
 }
 
+
+
 @override
 Widget build(BuildContext context) {
   return Scaffold(
@@ -412,7 +414,10 @@ Widget build(BuildContext context) {
                             ),
                             TextButton(
                               onPressed: () {
-                                // TODO: Implement Forgot Password
+                                showDialog(
+                                  context: context,
+                                  builder: (_) => const ForgotPasswordDialog(),
+                                );
                               },        
                               style: TextButton.styleFrom(
                                 foregroundColor: const Color(0xFF345612),
@@ -459,4 +464,426 @@ Widget build(BuildContext context) {
     ),
   );
 }
+}
+class ForgotPasswordDialog extends StatefulWidget {
+  const ForgotPasswordDialog({super.key});
+
+  @override
+  State<ForgotPasswordDialog> createState() =>
+      _ForgotPasswordDialogState();
+}
+
+class _ForgotPasswordDialogState extends State<ForgotPasswordDialog>
+    with SingleTickerProviderStateMixin {
+  final TextEditingController emailController =
+      TextEditingController();
+
+  late final AnimationController floatingController;
+  late final Animation<double> floatingAnimation;
+
+  bool isLoading = false;
+  bool isSubmitted = false;
+
+  String errorMessage = "";
+  String submittedEmail = "";
+
+  @override
+  void initState() {
+    super.initState();
+
+    floatingController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2500),
+    );
+
+    floatingAnimation = Tween<double>(
+      begin: -8,
+      end: 8,
+    ).animate(
+      CurvedAnimation(
+        parent: floatingController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    floatingController.repeat(
+      reverse: true,
+    );
+  }
+
+  Future<void> sendResetEmail() async {
+    final String email =
+        emailController.text.trim().toLowerCase();
+
+    setState(() {
+      errorMessage = "";
+    });
+
+    if (email.isEmpty) {
+      setState(() {
+        errorMessage =
+            "Please enter your email address.";
+      });
+
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final response = await http.post(
+        Uri.parse(
+          "https://monetee.xyz/api/auth/requestReset",
+        ),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({
+          "email": email,
+        }),
+      );
+
+      Map<String, dynamic> data = {};
+
+      try {
+        data = jsonDecode(response.body)
+            as Map<String, dynamic>;
+      } catch (_) {
+        data = {};
+      }
+
+      if (!mounted) {
+        return;
+      }
+
+      if (response.statusCode >= 200 &&
+          response.statusCode < 300) {
+        setState(() {
+          submittedEmail = email;
+          isSubmitted = true;
+        });
+      } else {
+        setState(() {
+          errorMessage =
+              data["error"]?.toString() ??
+                  data["message"]?.toString() ??
+                  "Unable to send reset email.";
+        });
+      }
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        errorMessage =
+            "Unable to connect to the server.";
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    floatingController.dispose();
+    emailController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: const EdgeInsets.symmetric(
+        horizontal: 24,
+      ),
+      child: Container(
+        width: 400,
+        padding: const EdgeInsets.all(28),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.15),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: SingleChildScrollView(
+          child: isSubmitted
+              ? _buildSubmittedView()
+              : _buildEmailForm(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSubmittedView() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const SizedBox(height: 8),
+
+        AnimatedBuilder(
+          animation: floatingAnimation,
+          child: Image.asset(
+            "assets/images/Monetee.png",
+            height: 150,
+            fit: BoxFit.contain,
+          ),
+          builder: (context, child) {
+            return Transform.translate(
+              offset: Offset(
+                0,
+                floatingAnimation.value,
+              ),
+              child: child,
+            );
+          },
+        ),
+
+        const SizedBox(height: 24),
+
+        const Text(
+          "If an account exists under the email:",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 15,
+            height: 1.6,
+          ),
+        ),
+
+        const SizedBox(height: 6),
+
+        Text(
+          submittedEmail,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: Color(0xFF345612),
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            height: 1.5,
+          ),
+        ),
+
+        const SizedBox(height: 12),
+
+        const Text(
+          "We'll send you an email with password reset instructions.",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 15,
+            height: 1.6,
+          ),
+        ),
+
+        const SizedBox(height: 28),
+
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor:
+                  const Color(0xFF345612),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(
+                vertical: 15,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(14),
+              ),
+            ),
+            child: const Text(
+              "Ok!",
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEmailForm() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFF56CEC0),
+              borderRadius:
+                  BorderRadius.circular(30),
+            ),
+            child: TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 8,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(20),
+                ),
+              ),
+              child: const Text(
+                "Log in instead",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 6),
+
+        const Text(
+          "Reset Your Password",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+
+        const SizedBox(height: 14),
+
+        const Text(
+          "Please enter the email related to your account:",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 15,
+            color: Color(0xFF1A1A1A),
+          ),
+        ),
+
+        const SizedBox(height: 22),
+
+        TextField(
+          controller: emailController,
+          keyboardType:
+              TextInputType.emailAddress,
+          textInputAction: TextInputAction.done,
+          autocorrect: false,
+          enableSuggestions: false,
+          onSubmitted: (_) {
+            if (!isLoading) {
+              sendResetEmail();
+            }
+          },
+          decoration: InputDecoration(
+            hintText: "Your email address",
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding:
+                const EdgeInsets.all(15),
+            enabledBorder: OutlineInputBorder(
+              borderRadius:
+                  BorderRadius.circular(14),
+              borderSide: const BorderSide(
+                color: Color(0xFF56CEC0),
+                width: 2,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius:
+                  BorderRadius.circular(14),
+              borderSide: const BorderSide(
+                color: Color(0xFF56CEC0),
+                width: 2,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius:
+                  BorderRadius.circular(14),
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 2,
+              ),
+            ),
+          ),
+        ),
+
+        if (errorMessage.isNotEmpty) ...[
+          const SizedBox(height: 14),
+          Text(
+            errorMessage,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Colors.red,
+              fontSize: 14,
+            ),
+          ),
+        ],
+
+        const SizedBox(height: 22),
+
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed:
+                isLoading ? null : sendResetEmail,
+            style: ElevatedButton.styleFrom(
+              backgroundColor:
+                  const Color(0xFF345612),
+              foregroundColor: Colors.white,
+              disabledBackgroundColor:
+                  const Color(0xFF345612)
+                      .withOpacity(0.7),
+              padding: const EdgeInsets.symmetric(
+                vertical: 15,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(14),
+              ),
+            ),
+            child: isLoading
+                ? const SizedBox(
+                    width: 22,
+                    height: 22,
+                    child:
+                        CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                      color: Colors.white,
+                    ),
+                  )
+                : const Text(
+                    "Reset Password",
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight:
+                          FontWeight.bold,
+                    ),
+                  ),
+          ),
+        ),
+      ],
+    );
+  }
 }
