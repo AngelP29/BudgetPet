@@ -27,14 +27,20 @@ function Verify() {
 
             try {
 
-                const response = await fetch(
-                    `/api/auth/verify?token=${token}`
-                );
+                const response = await fetch("/api/auth/verify", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        token,
+                    })
+                });
 
                 const data = await response.json();
 
                 if (!response.ok) {
-                    setMessage(data.error);
+                    setMessage(data.error || "Couldn't send password update request");
                     return;
                 }
 
@@ -44,13 +50,10 @@ function Verify() {
                     navigate("/");
                 }, 2500);
 
-            }
-            catch {
 
+            } catch (err) {
                 setMessage("Unable to verify your email.");
-
             }
-
         }
 
         verifyEmail();

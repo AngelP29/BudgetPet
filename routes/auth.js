@@ -181,9 +181,9 @@ router.post('/login', async (req, res) => {
 });
 
 //verification route for signups
-router.get("/verify", async (req, res) => {
+router.post("/verify", async (req, res) => {
     try {
-        const { token } = req.query;
+        const { token } = req.body;
 
         console.log("========== VERIFY ==========");
         console.log("Token from URL:", token);
@@ -223,7 +223,7 @@ router.get("/verify", async (req, res) => {
         console.log("Successfully verified:", user.email);
 
         return res.redirect(
-            `${process.env.FRONTEND_URL}/verify`
+            `${process.env.FRONTEND_URL}/`
         );
     } catch (err) {
         console.error(err);
