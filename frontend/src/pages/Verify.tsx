@@ -1,3 +1,5 @@
+console.log("verifyEmail called");
+
 import "./Verify.css";
 import Logo from "../components/Logo";
 import Background from "../components/Background";
