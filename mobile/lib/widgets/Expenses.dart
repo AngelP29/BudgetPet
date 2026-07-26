@@ -516,13 +516,16 @@ class _ExpensesState extends State<Expenses> {
   InputDecoration inputDecoration(String label) {
     return InputDecoration(
       labelText: label,
+      labelStyle: const TextStyle(
+        color: Color(0xFF777777),
+      ),
       filled: true,
-      fillColor: Colors.white,
+      fillColor: Color(0xFFFAF2E5),
       contentPadding: const EdgeInsets.all(14),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(
-          color: Color(0xFFE5E7EB),
+          color: Color(0xFF0077FF),
           width: 2,
         ),
       ),
@@ -703,7 +706,7 @@ class _ExpensesState extends State<Expenses> {
                   : [
                       actionButton(
                         label: "Manage",
-                        color: const Color(0xFF53C9A8),
+                        color: const Color(0xFF345212),
                         onPressed: () {
                           setState(() {
                             activeExpenseId = expenseId;
@@ -815,7 +818,7 @@ class _ExpensesState extends State<Expenses> {
                 child: ElevatedButton(
                   onPressed: isLoading ? null : addExpense,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF53C9A8),
+                    backgroundColor: const Color(0xFF345212),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(

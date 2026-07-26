@@ -307,14 +307,17 @@ class _QuickStatsState extends State<QuickStats> {
   InputDecoration _inputDecoration(String label) {
     return InputDecoration(
       labelText: label,
+      labelStyle: const TextStyle(
+        color: Color(0xFF777777),
+      ),
       prefixText: "\$ ",
       filled: true,
-      fillColor: Colors.white,
+      fillColor:  Color(0xFFFAF2E5),
       contentPadding: const EdgeInsets.all(14),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(
-          color: Color(0xFFE5E7EB),
+          color: Color(0xFF0077FF),
           width: 2,
         ),
       ),
@@ -360,7 +363,7 @@ class _QuickStatsState extends State<QuickStats> {
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: Color(0xFF4A7DF3),
-              fontSize: 30,
+              fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -387,9 +390,8 @@ class _QuickStatsState extends State<QuickStats> {
 
   @override
   Widget build(BuildContext context) {
-
     return ClipRRect(
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(25),
       child: BackdropFilter(
         filter: ImageFilter.blur(
           sigmaX: 10,
@@ -400,7 +402,7 @@ class _QuickStatsState extends State<QuickStats> {
           padding: const EdgeInsets.all(30),
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.88),
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(25),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.12),
@@ -550,8 +552,8 @@ class _QuickStatsState extends State<QuickStats> {
                   onPressed:
                       isSavingGoals ? null : updateGoals,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF53C9A8),
-                    foregroundColor: Colors.white,
+                    backgroundColor: const Color(0xFF345212),
+                    foregroundColor: const Color(0xFFFFFFFF),
                     disabledBackgroundColor:
                         const Color(0xFF53C9A8).withOpacity(0.7),
                     padding: const EdgeInsets.symmetric(

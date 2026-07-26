@@ -176,7 +176,7 @@ class _PetChatState extends State<PetChat> {
       width: double.infinity,
       padding: const EdgeInsets.all(30),
       decoration: BoxDecoration(
-        color: Colors.transparent,
+        color: Colors.white.withOpacity(0.88),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
@@ -195,7 +195,7 @@ class _PetChatState extends State<PetChat> {
               "Pet Coach",
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.white,
+                color: const Color.fromARGB(255, 0, 0, 0),
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
