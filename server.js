@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
 require('dotenv').config();
 
 // Initialize application framework
@@ -9,6 +11,22 @@ const app = express();
 // Middleware injections
 app.use(express.json());
 app.use(cors());
+
+// Swagger Documentation Configuration
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'BudgetPet / Monetee API Documentation',
+      version: '1.0.0',
+      description: 'Interactive API documentation for authentication, expenses, pets, and AI endpoints.',
+    },
+  },
+  apis: ['./routes/*.js'], // Reads annotations inside your routes folder
+};
+
+const swaggerDocs = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // REQUIRE ROUTE BLUEPRINTS
 const authRoutes = require('./routes/auth');
@@ -36,7 +54,10 @@ const uri = process.env.MONGODB_URI;
 mongoose.connect(uri)
   .then(() => {
     console.log("MongoDB database connection established successfully! 🐱");
-    app.listen(PORT, () => console.log(`Backend server running locally on port ${PORT}`));
+    app.listen(PORT, () => {
+      console.log(`Backend server running locally on port ${PORT}`);
+      console.log(`Swagger Documentation available at http://localhost:${PORT}/api-docs`);
+    });
   })
   .catch(err => {
     console.error("Database connection error:", err);
