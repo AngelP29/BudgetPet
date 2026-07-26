@@ -7,7 +7,6 @@ import 'SignupScreen.dart';
 import 'dart:ui';
 
 
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -724,40 +723,7 @@ class _ForgotPasswordDialogState extends State<ForgotPasswordDialog>
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFF56CEC0),
-              borderRadius:
-                  BorderRadius.circular(30),
-            ),
-            child: TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 8,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(20),
-                ),
-              ),
-              child: const Text(
-                "Log in instead",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
-            ),
-          ),
-        ),
-
+  
         const SizedBox(height: 6),
 
         const Text(
