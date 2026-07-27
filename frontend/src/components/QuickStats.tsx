@@ -3,6 +3,7 @@ import "./QuickStats.css"
 
 type QuickStatsProps = {
     refreshTrigger: number;
+    onGoalsUpdated: () => void;
 };
 
 type QuickStatsResponse = {
@@ -12,7 +13,7 @@ type QuickStatsResponse = {
     budgetRemaining: number;
 };
 
-function QuickStats({ refreshTrigger }: QuickStatsProps){
+function QuickStats({ refreshTrigger, onGoalsUpdated }: QuickStatsProps){
     const [monthlyBudget, setMonthlyBudget] = useState("");
     const [monthlySavingsGoal, setMonthlySavingsGoal] = useState("");
     const [totalSpent, setTotalSpent] = useState(0);
@@ -126,6 +127,8 @@ function QuickStats({ refreshTrigger }: QuickStatsProps){
             setInputSavingsGoal("");
 
             await getQuickStats();
+
+            onGoalsUpdated();
 
         } catch (e) {
             setErrorMessage("Unable to update goals right now.");

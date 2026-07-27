@@ -70,7 +70,7 @@ function Dashboard() {
             <section className="dashboard-grid">
 
                 {/* Quick Stats */}
-                <QuickStats refreshTrigger={refreshDashboard} />
+                <QuickStats refreshTrigger={refreshDashboard} onGoalsUpdated={refreshDashboardData}/>
 
                 {/* AI Coach */}
                 <PetChat />
