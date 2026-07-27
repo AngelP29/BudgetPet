@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require('../models/User');
 const Expense = require('../models/Expense');
 const authenticateToken = require("../middleware/authenticateToken");
+const { updatePetHappiness } = require("../utils/petUtils");
 
 // GET quick stats for one user
 router.get('/', authenticateToken, async (req, res) => {
@@ -81,6 +82,8 @@ router.put('/', authenticateToken, async (req, res) => {
         if (!updatedUser) {
             return res.status(404).json({ error: "User not found." });
         }
+
+        await updatePetHappiness(userId);
 
         return res.json({
             message: "Goals updated successfully!",
