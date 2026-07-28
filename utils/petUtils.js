@@ -2,14 +2,14 @@ const Expense = require("../models/Expense");
 const Pet = require("../models/Pet");
 const User = require("../models/User");
 
-async function updatePetHappiness(userId, pet = null){
+async function updatePetHappiness(userId, pet = null) {
     const user = await User.findById(userId);
-    
-    if(!pet){
+
+    if (!pet) {
         pet = await Pet.findOne({ userId });
     }
 
-    if(!user || !pet){
+    if (!user || !pet) {
         return;
     }
 
@@ -32,30 +32,20 @@ async function updatePetHappiness(userId, pet = null){
 
     const monthlyBudget = user.monthlyBudget || 0;
 
-    if(monthlyBudget <= 0){
+    if (monthlyBudget <= 0) {
         pet.happiness = 100;
     } else {
         const percentUsed = totalSpent / monthlyBudget;
 
-        if (percentUsed > 0.6 && percentUsed <= 1) 
-        {
-            pet.happiness = 100;
-        }
-
-        if (percentUsed > 0.5 &&  percentUsed < 0.6) 
-        {
+        if (percentUsed > 0.6) {
+            pet.happiness = 100; 
+        } else if (percentUsed >= 0.5) {
             pet.happiness = 50;
-        }
-
-        if (percentUsed >= 0.1 &&  percentUsed < 0.5) 
-        {
+        } else if (percentUsed >= 0.1) {
             pet.happiness = 30;
-        }
-
-        if (percentUsed < 0.1){
+        } else {
             pet.happiness = 10;
         }
-
     }
 
     await pet.save();
