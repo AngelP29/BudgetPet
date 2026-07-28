@@ -44,7 +44,7 @@ async function updatePetHappiness(userId, pet = null) {
         } else if (percentUsed >= 0.1) {
             pet.happiness = 100;
         } else {
-            pet.happiness = 0;
+            pet.happiness = 100;
         }
     }
 
