@@ -38,13 +38,13 @@ async function updatePetHappiness(userId, pet = null) {
         const percentUsed = totalSpent / monthlyBudget;
 
         if (percentUsed > 0.6) {
-            pet.happiness = 100; 
+            pet.happiness = 30; 
         } else if (percentUsed >= 0.5) {
             pet.happiness = 50;
         } else if (percentUsed >= 0.1) {
-            pet.happiness = 30;
+            pet.happiness = 100;
         } else {
-            pet.happiness = 10;
+            pet.happiness = 0;
         }
     }
 
