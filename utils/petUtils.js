@@ -37,17 +37,25 @@ async function updatePetHappiness(userId, pet = null){
     } else {
         const percentUsed = totalSpent / monthlyBudget;
 
-        if (percentUsed <= 0.50) {
+        if (percentUsed > 0.6 && percentUsed <= 1) 
+        {
             pet.happiness = 100;
-        } else if (percentUsed <= 0.75) {
-            pet.happiness = 85;
-        } else if (percentUsed <= 0.90) {
-            pet.happiness = 70;
-        } else if (percentUsed <= 1.00) {
-            pet.happiness = 50;
-        } else {
-            pet.happiness = 25;
         }
+
+        if (percentUsed > 0.5 &&  percentUsed < 0.6) 
+        {
+            pet.happiness = 50;
+        }
+
+        if (percentUsed >= 0.1 &&  percentUsed < 0.5) 
+        {
+            pet.happiness = 30;
+        }
+
+        if (percentUsed < 0.1){
+            pet.happiness = 10;
+        }
+
     }
 
     await pet.save();
